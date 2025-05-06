@@ -3,9 +3,15 @@ import { Tabs } from 'expo-router';
 
 export default function TabLayout() {
   return (
-    <Tabs screenOptions={{ headerShown: false }}>
+    <Tabs
+      screenOptions={{
+        headerShown: false,
+        tabBarActiveTintColor: '#8C3428',
+        //tabBarStyle: { backgroundColor: '#C1763D' },
+      }}
+    >
       <Tabs.Screen
-        name="(drills)"
+        name="(1-drills)"
         options={{
           title: 'Drills',
           tabBarIcon: ({ color }) => (
@@ -14,7 +20,7 @@ export default function TabLayout() {
         }}
       />
       <Tabs.Screen
-        name="(board)"
+        name="(2-board)"
         options={{
           title: 'Tac Board',
           tabBarIcon: ({ color }) => (
@@ -23,7 +29,7 @@ export default function TabLayout() {
         }}
       />
       <Tabs.Screen
-        name="(profile)"
+        name="(3-profile)"
         options={{
           title: 'Profile',
           tabBarIcon: ({ color }) => (
