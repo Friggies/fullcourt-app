@@ -1,8 +1,8 @@
 {
     "expo": {
-        "name": "onside-app",
-        "scheme": "com.onside_training",
-        "slug": "onside-app",
+        "name": "fullcourt-app",
+        "scheme": "com.fullcourt_training",
+        "slug": "fullcourt-app",
         "version": "1.0.0",
         "orientation": "portrait",
         "icon": "./assets/icon.png",
