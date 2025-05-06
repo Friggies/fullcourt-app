@@ -1,5 +1,5 @@
-import { Text } from "react-native";
+import { Text } from 'react-native';
 
 export default function index() {
-    return <Text>HEJ</Text>;
+  return <Text>HEJ</Text>;
 }

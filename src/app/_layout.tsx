@@ -1,10 +1,10 @@
-import { Slot } from "expo-router";
-import { SessionProvider } from "../contexts/auth";
+import { Slot } from 'expo-router';
+import { SessionProvider } from '../contexts/auth';
 
 export default function App() {
-    return (
-        <SessionProvider>
-            <Slot />
-        </SessionProvider>
-    );
+  return (
+    <SessionProvider>
+      <Slot />
+    </SessionProvider>
+  );
 }
