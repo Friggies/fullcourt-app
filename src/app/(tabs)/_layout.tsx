@@ -9,7 +9,7 @@ export default function TabLayout() {
                 options={{
                     title: "Drills",
                     tabBarIcon: ({ color }) => (
-                        <MaterialCommunityIcons size={26} name="soccer" color={color} />
+                        <MaterialCommunityIcons size={26} name="basketball" color={color} />
                     ),
                 }}
             />
@@ -18,7 +18,7 @@ export default function TabLayout() {
                 options={{
                     title: "Tac Board",
                     tabBarIcon: ({ color }) => (
-                        <MaterialCommunityIcons size={28} name="soccer-field" color={color} />
+                        <MaterialCommunityIcons size={28} name="draw" color={color} />
                     ),
                 }}
             />
@@ -27,7 +27,7 @@ export default function TabLayout() {
                 options={{
                     title: "Profile",
                     tabBarIcon: ({ color }) => (
-                        <MaterialCommunityIcons size={28} name="account-outline" color={color} />
+                        <MaterialCommunityIcons size={28} name="account" color={color} />
                     ),
                 }}
             />
