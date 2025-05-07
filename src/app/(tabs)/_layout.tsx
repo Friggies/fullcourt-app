@@ -1,5 +1,5 @@
 import MaterialCommunityIcons from '@expo/vector-icons/MaterialCommunityIcons';
-import { Tabs } from 'expo-router';
+import { Stack, Tabs } from 'expo-router';
 
 export default function TabLayout() {
   return (
@@ -7,7 +7,6 @@ export default function TabLayout() {
       screenOptions={{
         headerShown: false,
         tabBarActiveTintColor: '#8C3428',
-        //tabBarStyle: { backgroundColor: '#C1763D' },
       }}
     >
       <Tabs.Screen

@@ -1,6 +1,9 @@
-// DrawingCanvas.tsx
-
-import React, { useRef, useState } from 'react';
+import React, {
+  forwardRef,
+  useImperativeHandle,
+  useRef,
+  useState,
+} from 'react';
 import {
   View,
   StyleSheet,
@@ -11,13 +14,20 @@ import {
 import Svg, { Path } from 'react-native-svg';
 
 const { width, height } = Dimensions.get('window');
-type Point = { x: number; y: number };
 
-export default function DrawingCanvas() {
+type Point = { x: number; y: number };
+export type CanvasHandle = {
+  clear: () => void;
+};
+
+const Canvas = forwardRef<CanvasHandle>((props, ref) => {
   const [strokes, setStrokes] = useState<Point[][]>([]);
   const currentStroke = useRef<Point[]>([]);
 
-  // Convert a stroke (array of points) to an SVG 'd' string
+  useImperativeHandle(ref, () => ({
+    clear: () => setStrokes([]),
+  }));
+
   const makePath = (points: Point[]) =>
     points.length === 0
       ? ''
@@ -26,13 +36,11 @@ export default function DrawingCanvas() {
   const panResponder = useRef(
     PanResponder.create({
       onStartShouldSetPanResponder: () => true,
-      // Use locationX/Y here…
       onPanResponderGrant: (e: GestureResponderEvent) => {
         const { locationX: x, locationY: y } = e.nativeEvent;
         currentStroke.current = [{ x, y }];
         setStrokes((prev) => [...prev, currentStroke.current]);
       },
-      // …and *also* locationX/Y here
       onPanResponderMove: (e: GestureResponderEvent) => {
         const { locationX: x, locationY: y } = e.nativeEvent;
         currentStroke.current.push({ x, y });
@@ -42,9 +50,7 @@ export default function DrawingCanvas() {
           return copy;
         });
       },
-      onPanResponderRelease: () => {
-        /* nothing extra needed */
-      },
+      onPanResponderRelease: () => {},
     })
   ).current;
 
@@ -56,7 +62,7 @@ export default function DrawingCanvas() {
             key={i}
             d={makePath(pts)}
             stroke="black"
-            strokeWidth={4}
+            strokeWidth={2}
             fill="none"
             strokeLinecap="round"
             strokeLinejoin="round"
@@ -65,7 +71,9 @@ export default function DrawingCanvas() {
       </Svg>
     </View>
   );
-}
+});
+
+export default Canvas;
 
 const styles = StyleSheet.create({
   container: {

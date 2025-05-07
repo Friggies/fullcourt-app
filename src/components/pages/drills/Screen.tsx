@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, StyleSheet, ImageBackground } from 'react-native';
+import { View, StyleSheet, ImageBackground, ScrollView } from 'react-native';
 
 type ScreenProps = {
   children: React.ReactNode;
@@ -11,7 +11,12 @@ export default function Screen({ children }: ScreenProps) {
       source={require('../../../../assets/images/basketball-court-floor.jpg')}
       style={styles.container}
     >
-      <View style={styles.column}>{children}</View>
+      <ScrollView
+        contentContainerStyle={styles.scrollContent}
+        showsVerticalScrollIndicator={false}
+      >
+        <View style={styles.column}>{children}</View>
+      </ScrollView>
     </ImageBackground>
   );
 }
@@ -19,11 +24,14 @@ export default function Screen({ children }: ScreenProps) {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    padding: 16,
     backgroundColor: '#F4F4F4',
+  },
+  scrollContent: {
+    flexGrow: 1,
+    padding: 8,
   },
   column: {
     flex: 1,
-    gap: 16,
+    gap: 8,
   },
 });

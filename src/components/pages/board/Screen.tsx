@@ -1,18 +1,23 @@
 import React from 'react';
-import { StyleSheet, ImageBackground, ImageStyle, View } from 'react-native';
+import { StyleSheet, ImageBackground } from 'react-native';
 
 type ScreenProps = {
   children: React.ReactNode;
+  zoomed?: boolean;
 };
 
-export default function Screen({ children }: ScreenProps) {
+export default function Screen({ children, zoomed = false }: ScreenProps) {
+  const source = zoomed
+    ? require('../../../../assets/images/basketball-half-court-916.jpg')
+    : require('../../../../assets/images/basketball-court-tilted.jpg');
+
   return (
     <ImageBackground
-      source={require('../../../../assets/images/basketball-court-tilted.jpg')}
+      source={source}
       style={styles.container}
       imageStyle={styles.rotatedImage}
     >
-      <View style={styles.column}>{children}</View>
+      {children}
     </ImageBackground>
   );
 }
@@ -20,16 +25,8 @@ export default function Screen({ children }: ScreenProps) {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    padding: 16,
-    backgroundColor: '#F4F4F4',
   },
   rotatedImage: {
-    width: 'auto',
-    height: 'auto',
-    resizeMode: 'contain',
-  } as ImageStyle,
-  column: {
-    flex: 1,
-    gap: 16,
+    resizeMode: 'stretch',
   },
 });
