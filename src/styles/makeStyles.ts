@@ -25,8 +25,6 @@ export const makeStyles = (theme: Theme) =>
       backgroundColor: theme.colors.background,
       paddingVertical: 4,
       paddingHorizontal: 8,
-      fontSize: 12,
-      fontWeight: theme.text.body.fontWeight,
       fontFamily: theme.text.body.fontFamily,
       borderColor: '#f2f2f2',
       borderWidth: 1,
@@ -34,18 +32,6 @@ export const makeStyles = (theme: Theme) =>
     },
     content: {
       padding: 16,
-    },
-    title: {
-      color: theme.colors.text,
-      fontSize: theme.text.header.fontSize,
-      fontWeight: theme.text.header.fontWeight,
-      fontFamily: theme.text.header.fontFamily,
-    },
-    infoText: {
-      color: theme.colors.text,
-      fontSize: theme.text.body.fontSize,
-      fontWeight: theme.text.body.fontWeight,
-      fontFamily: theme.text.body.fontFamily,
     },
     info: {
       flexDirection: 'row',

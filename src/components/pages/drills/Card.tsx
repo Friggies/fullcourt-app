@@ -1,9 +1,10 @@
 // Card.tsx
 import React from 'react';
-import { Text, Image, View, Pressable } from 'react-native';
+import { Image, View, Pressable } from 'react-native';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import { useTheme } from '../../../contexts/theme';
 import { makeStyles } from '../../../styles/makeStyles';
+import { Text } from '../../common/Text';
 
 type CardProps = {
   drill: {
@@ -34,7 +35,7 @@ export default function Card({ drill }: CardProps) {
         ))}
       </View>
       <View style={styles.content}>
-        <Text style={styles.title}>{drill.title}</Text>
+        <Text variant="title">{drill.title}</Text>
         <View style={styles.info}>
           <Text>{drill.type} drill</Text>
           <Text>
@@ -42,7 +43,7 @@ export default function Card({ drill }: CardProps) {
             <MaterialCommunityIcons
               name="account-group"
               size={16}
-              color={styles.infoText.color}
+              color={theme.colors.text}
             />
           </Text>
         </View>

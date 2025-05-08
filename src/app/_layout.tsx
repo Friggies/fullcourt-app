@@ -8,8 +8,11 @@ SplashScreen.preventAutoHideAsync();
 
 export default function AppLayout() {
   const [loaded, error] = useFonts({
-    'Inter-Var': require('../../assets/fonts/Inter-VariableFont.ttf'),
-    'Inter-Italic-Var': require('../../assets/fonts/Inter-Italic-VariableFont.ttf'),
+    Inter: require('../../assets/fonts/inter-400.ttf'),
+    InterItalic: require('../../assets/fonts/inter-400-italic.ttf'),
+    Inter300: require('../../assets/fonts/inter-300.ttf'),
+    Inter600: require('../../assets/fonts/inter-600.ttf'),
+    Inter800: require('../../assets/fonts/inter-800.ttf'),
   });
 
   useEffect(() => {

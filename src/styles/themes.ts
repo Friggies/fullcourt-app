@@ -1,42 +1,40 @@
-import type { TextStyle } from 'react-native';
+export type TextStyle = {
+  fontSize: 24 | 20 | 16 | 14;
+  fontFamily: 'Inter800' | 'Inter600' | 'Inter300' | 'Inter' | 'InterItalic';
+};
 
 export type Theme = {
   colors: {
     background: string;
     text: string;
   };
-  text: {
-    header: {
-      fontSize: number;
-      fontWeight: TextStyle['fontWeight'];
-      fontFamily: string;
-    };
-    body: {
-      fontSize: number;
-      fontWeight: TextStyle['fontWeight'];
-      fontFamily: string;
-    };
-  };
+  text: Record<string, TextStyle>;
+};
+
+const baseTextStyles: Record<string, TextStyle> = {
+  hero: { fontSize: 24, fontFamily: 'Inter800' },
+  title: { fontSize: 20, fontFamily: 'Inter600' },
+  label: { fontSize: 14, fontFamily: 'Inter300' },
+  italic: { fontSize: 16, fontFamily: 'InterItalic' },
+  body: { fontSize: 16, fontFamily: 'Inter' },
 };
 
 export const lightTheme: Theme = {
   colors: {
-    background: '#ffffff',
+    background: '#f2f2f2',
     text: '#000000',
   },
   text: {
-    header: { fontSize: 24, fontWeight: 'bold', fontFamily: 'Inter-Var' },
-    body: { fontSize: 16, fontWeight: 'normal', fontFamily: 'Inter-Var' },
+    ...baseTextStyles,
   },
 };
 
 export const darkTheme: Theme = {
   colors: {
-    background: '#000000',
+    background: '#0F0F0F',
     text: '#ffffff',
   },
   text: {
-    header: { fontSize: 24, fontWeight: 'black', fontFamily: 'Inter-Var' },
-    body: { fontSize: 16, fontWeight: 'normal', fontFamily: 'Inter-Var' },
+    ...baseTextStyles,
   },
 };
