@@ -1,6 +1,9 @@
+// Card.tsx
 import React from 'react';
-import { StyleSheet, Text, Image, View, Pressable } from 'react-native';
+import { Text, Image, View, Pressable } from 'react-native';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
+import { useTheme } from '../../../contexts/theme';
+import { makeStyles } from '../../../styles/makeStyles';
 
 type CardProps = {
   drill: {
@@ -12,6 +15,9 @@ type CardProps = {
 };
 
 export default function Card({ drill }: CardProps) {
+  const { theme } = useTheme();
+  const styles = makeStyles(theme);
+
   return (
     <Pressable style={styles.card}>
       <Image
@@ -22,7 +28,7 @@ export default function Card({ drill }: CardProps) {
       />
       <View style={styles.categories}>
         {drill.categories.map((category) => (
-          <Text key={category} style={styles.category}>
+          <Text key={category} style={styles.categoryText}>
             {category}
           </Text>
         ))}
@@ -36,7 +42,7 @@ export default function Card({ drill }: CardProps) {
             <MaterialCommunityIcons
               name="account-group"
               size={16}
-              color="black"
+              color={styles.infoText.color}
             />
           </Text>
         </View>
@@ -44,44 +50,3 @@ export default function Card({ drill }: CardProps) {
     </Pressable>
   );
 }
-
-const styles = StyleSheet.create({
-  card: {
-    backgroundColor: '#fff',
-    borderRadius: 4,
-    flexDirection: 'column',
-  },
-  image: {
-    width: '100%',
-    height: 150,
-    resizeMode: 'cover',
-  },
-  categories: {
-    position: 'absolute',
-    flexDirection: 'row',
-    gap: 4,
-    top: 140,
-    right: 16,
-  },
-  category: {
-    backgroundColor: 'white',
-    paddingBlock: 4,
-    paddingInline: 8,
-    fontSize: 12,
-    borderColor: '#f2f2f2',
-    borderWidth: 1,
-    borderRadius: 50,
-  },
-  content: {
-    padding: 16,
-  },
-  info: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'baseline',
-  },
-  title: {
-    fontSize: 18,
-    fontWeight: '500',
-  },
-});
