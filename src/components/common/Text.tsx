@@ -10,7 +10,7 @@ interface Props extends TextProps {
   children: React.ReactNode;
 }
 
-export function Text({ variant, children }: Props) {
+export function Text({ variant, style, children }: Props) {
   const { theme } = useTheme();
 
   let size: 24 | 20 | 16 | 14;
@@ -37,11 +37,14 @@ export function Text({ variant, children }: Props) {
 
   return (
     <RNText
-      style={{
-        color: theme.colors.text,
-        fontSize: size,
-        fontFamily: family,
-      }}
+      style={[
+        style,
+        {
+          color: theme.colors.text,
+          fontSize: size,
+          fontFamily: family,
+        },
+      ]}
     >
       {children}
     </RNText>

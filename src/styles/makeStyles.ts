@@ -26,7 +26,7 @@ export const makeStyles = (theme: Theme) =>
       paddingVertical: 4,
       paddingHorizontal: 8,
       fontFamily: theme.text.body.fontFamily,
-      borderColor: '#f2f2f2',
+      borderColor: theme.colors.faded,
       borderWidth: 1,
       borderRadius: 50,
     },

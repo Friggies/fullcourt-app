@@ -7,6 +7,7 @@ export type Theme = {
   colors: {
     background: string;
     text: string;
+    faded: string;
   };
   text: Record<string, TextStyle>;
 };
@@ -23,6 +24,7 @@ export const lightTheme: Theme = {
   colors: {
     background: '#f2f2f2',
     text: '#000000',
+    faded: '#eeeeee',
   },
   text: {
     ...baseTextStyles,
@@ -33,6 +35,7 @@ export const darkTheme: Theme = {
   colors: {
     background: '#0F0F0F',
     text: '#ffffff',
+    faded: '#514f4f',
   },
   text: {
     ...baseTextStyles,
