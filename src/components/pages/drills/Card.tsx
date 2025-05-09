@@ -5,16 +5,7 @@ import { MaterialCommunityIcons } from '@expo/vector-icons';
 import { useTheme } from '../../../contexts/theme';
 import { makeStyles } from '../../../styles/makeStyles';
 import { Text } from '../../common/Text';
-
-type Drill = {
-  id: number;
-  title: string;
-  link: string;
-  type: string;
-  players: number;
-  content: string;
-  premium: boolean;
-};
+import { Drill } from '../../../types/Drill';
 
 type CardProps = {
   drill: Drill;

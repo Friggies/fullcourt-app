@@ -38,4 +38,30 @@ export const makeStyles = (theme: Theme) =>
       justifyContent: 'space-between',
       alignItems: 'baseline',
     },
+    searchInputHeader: {
+      flex: 1,
+      backgroundColor: theme.colors.background,
+      borderRadius: 4,
+      padding: 8,
+    },
+    modalOverlay: {
+      flex: 1,
+      backgroundColor: 'rgba(0,0,0,0.5)',
+      justifyContent: 'center',
+    },
+    modalContent: {
+      margin: 20,
+      padding: 16,
+      backgroundColor: 'white',
+      borderRadius: 8,
+    },
+    modalButtons: {
+      flexDirection: 'row',
+      justifyContent: 'space-between',
+      marginTop: 16,
+    },
+    flatlist: {
+      padding: 8,
+      gap: 4,
+    },
   });
