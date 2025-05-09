@@ -1,18 +1,44 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { Pressable } from 'react-native';
 import { Stack } from 'expo-router';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
-
 import Screen from '../../../components/pages/drills/Screen';
 import Card from '../../../components/pages/drills/Card';
+import { supabase } from '../../../lib/supabase';
+import { PostgrestError } from '@supabase/supabase-js';
+import { Text } from '../../../components/common/Text';
+
+type Drill = {
+  id: number;
+  title: string;
+  link: string;
+  type: string;
+  players: number;
+  content: string;
+  premium: boolean;
+};
 
 export default function Drills() {
-  const drill = {
-    title: 'Merge Race',
-    type: 'Warm-up',
-    categories: ['Passing', 'Lorem'],
-    players: 3,
-  };
+  const [drills, setDrills] = useState<Drill[]>([]);
+  const [error, setError] = useState<PostgrestError | null>(null);
+
+  useEffect(() => {
+    const fetchDrills = async () => {
+      const { data, error } = await supabase
+        .from('drills')
+        .select('*')
+        .range(0, 9);
+
+      if (error) {
+        console.error('Error fetching drills:', error);
+        setError(error);
+      } else {
+        setDrills(data);
+      }
+    };
+
+    fetchDrills();
+  }, []);
 
   return (
     <>
@@ -42,9 +68,11 @@ export default function Drills() {
       />
 
       <Screen>
-        {[...Array(9)].map((_, i) => (
-          <Card key={i} drill={drill} />
+        {drills.map((drill) => (
+          <Card key={drill.id} drill={drill} />
         ))}
+
+        {error && <Text>Error loading drills.</Text>}
       </Screen>
     </>
   );

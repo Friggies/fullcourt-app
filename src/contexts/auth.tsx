@@ -7,7 +7,6 @@ import {
 } from 'react';
 import { Session, AuthChangeEvent } from '@supabase/supabase-js';
 import { supabase } from '../lib/supabase';
-import { useRouter } from 'expo-router';
 
 type AuthContextType = {
   session: Session | null;
@@ -34,7 +33,6 @@ export function useSession() {
 export function SessionProvider({ children }: PropsWithChildren) {
   const [session, setSession] = useState<Session | null>(null);
   const [isLoading, setLoading] = useState(true);
-  const router = useRouter();
 
   useEffect(() => {
     // Get initial session

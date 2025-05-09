@@ -6,13 +6,18 @@ import { useTheme } from '../../../contexts/theme';
 import { makeStyles } from '../../../styles/makeStyles';
 import { Text } from '../../common/Text';
 
+type Drill = {
+  id: number;
+  title: string;
+  link: string;
+  type: string;
+  players: number;
+  content: string;
+  premium: boolean;
+};
+
 type CardProps = {
-  drill: {
-    title: string;
-    type: string;
-    categories: string[];
-    players: number;
-  };
+  drill: Drill;
 };
 
 export default function Card({ drill }: CardProps) {
@@ -28,11 +33,7 @@ export default function Card({ drill }: CardProps) {
         }}
       />
       <View style={styles.categories}>
-        {drill.categories.map((category) => (
-          <Text key={category} style={styles.categoryText}>
-            {category}
-          </Text>
-        ))}
+        <Text style={styles.categoryText}>"Test"</Text>
       </View>
       <View style={styles.content}>
         <Text variant="title">{drill.title}</Text>
