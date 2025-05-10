@@ -6,6 +6,7 @@ import { useTheme } from '../../../contexts/theme';
 import { makeStyles } from '../../../styles/makeStyles';
 import { Text } from '../../common/Text';
 import { Drill } from '../../../types/Drill';
+import { Link } from 'expo-router';
 
 type CardProps = {
   drill: Drill;
@@ -16,30 +17,39 @@ export default function Card({ drill }: CardProps) {
   const styles = makeStyles(theme);
 
   return (
-    <Pressable style={styles.card}>
-      <Image
-        style={styles.image}
-        source={{
-          uri: 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADMAAAAzCAYAAAA6oTAqAAAAEXRFWHRTb2Z0d2FyZQBwbmdjcnVzaEB1SfMAAABQSURBVGje7dSxCQBACARB+2/ab8BEeQNhFi6WSYzYLYudDQYGBgYGBgYGBgYGBgYGBgZmcvDqYGBgmhivGQYGBgYGBgYGBgYGBgYGBgbmQw+P/eMrC5UTVAAAAABJRU5ErkJggg==',
-        }}
-      />
-      <View style={styles.categories}>
-        <Text style={styles.categoryText}>"Test"</Text>
-      </View>
-      <View style={styles.content}>
-        <Text variant="title">{drill.title}</Text>
-        <View style={styles.info}>
-          <Text>{drill.type} drill</Text>
-          <Text>
-            {`${drill.players} `}
-            <MaterialCommunityIcons
-              name="account-group"
-              size={16}
-              color={theme.colors.text}
-            />
-          </Text>
+    <Link
+      style={styles.card}
+      href={{
+        pathname: '/(tabs)/(1-drills)/[drillId]',
+        params: { drillId: drill.id },
+      }}
+      asChild
+    >
+      <Pressable>
+        <Image
+          style={styles.image}
+          source={{
+            uri: 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADMAAAAzCAYAAAA6oTAqAAAAEXRFWHRTb2Z0d2FyZQBwbmdjcnVzaEB1SfMAAABQSURBVGje7dSxCQBACARB+2/ab8BEeQNhFi6WSYzYLYudDQYGBgYGBgYGBgYGBgYGBgZmcvDqYGBgmhivGQYGBgYGBgYGBgYGBgYGBgbmQw+P/eMrC5UTVAAAAABJRU5ErkJggg==',
+          }}
+        />
+        <View style={styles.categories}>
+          <Text style={styles.categoryText}>"Test"</Text>
         </View>
-      </View>
-    </Pressable>
+        <View style={styles.content}>
+          <Text variant="title">{drill.title}</Text>
+          <View style={styles.info}>
+            <Text>{drill.type} drill</Text>
+            <Text>
+              {`${drill.players} `}
+              <MaterialCommunityIcons
+                name="account-group"
+                size={16}
+                color={theme.colors.text}
+              />
+            </Text>
+          </View>
+        </View>
+      </Pressable>
+    </Link>
   );
 }

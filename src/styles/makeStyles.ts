@@ -32,6 +32,7 @@ export const makeStyles = (theme: Theme) =>
     },
     content: {
       padding: 16,
+      width: '100%',
     },
     info: {
       flexDirection: 'row',

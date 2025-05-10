@@ -87,10 +87,7 @@ export default function Drills() {
       <Stack.Screen
         options={{
           headerLeft: () => (
-            <Pressable
-              style={{ marginLeft: 8 }}
-              onPress={() => setSearchVisible((v) => !v)}
-            >
+            <Pressable onPress={() => setSearchVisible((v) => !v)}>
               {searchVisible ? (
                 <MaterialCommunityIcons name="close" size={24} color="black" />
               ) : (

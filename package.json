@@ -12,14 +12,16 @@
     "@react-native-async-storage/async-storage": "2.1.2",
     "@supabase/supabase-js": "^2.49.4",
     "expo": "~53.0.9",
+    "expo-font": "~13.3.1",
     "expo-router": "~5.0.6",
+    "expo-splash-screen": "~0.30.8",
     "react": "19.0.0",
     "react-dom": "19.0.0",
     "react-native": "0.79.2",
+    "react-native-markdown-display": "^7.0.2",
     "react-native-svg": "^15.11.2",
     "react-native-web": "^0.20.0",
-    "expo-font": "~13.3.1",
-    "expo-splash-screen": "~0.30.8"
+    "expo-video": "~2.1.8"
   },
   "devDependencies": {
     "@babel/core": "^7.25.2",
