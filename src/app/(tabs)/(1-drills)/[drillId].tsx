@@ -1,4 +1,3 @@
-// app/(tabs)/(1-drills)/[drillId].tsx
 import React, { useEffect, useState, useCallback } from 'react';
 import { View, ScrollView, ActivityIndicator } from 'react-native';
 import { Stack, useLocalSearchParams } from 'expo-router';
@@ -42,7 +41,7 @@ export default function DrillDetail() {
     <>
       <Stack.Screen
         options={{
-          title: drill ? drill.title : 'Drill Details',
+          title: drill ? drill.name : 'Drill Details',
         }}
       />
       <Screen>
@@ -51,10 +50,9 @@ export default function DrillDetail() {
         ) : drill ? (
           <ScrollView>
             <View>
-              <Text variant="title">{drill.title}</Text>
+              <Text variant="title">{drill.name}</Text>
               <View>
-                <Text>{drill.type} drill</Text>
-                <Text>{drill.players}</Text>
+                <Text>{drill.category}</Text>
                 <MaterialCommunityIcons
                   name="account-group"
                   size={16}
@@ -62,7 +60,7 @@ export default function DrillDetail() {
                 />
               </View>
               <Video source={drill.link} />
-              <Markdown>{drill.content}</Markdown>
+              <Markdown>{drill.description}</Markdown>
             </View>
           </ScrollView>
         ) : (

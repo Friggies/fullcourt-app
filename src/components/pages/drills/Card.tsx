@@ -1,7 +1,6 @@
 // Card.tsx
 import React from 'react';
 import { Image, View, Pressable } from 'react-native';
-import { MaterialCommunityIcons } from '@expo/vector-icons';
 import { useTheme } from '../../../contexts/theme';
 import { makeStyles } from '../../../styles/makeStyles';
 import { Text } from '../../common/Text';
@@ -29,24 +28,13 @@ export default function Card({ drill }: CardProps) {
         <Image
           style={styles.image}
           source={{
-            uri: 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADMAAAAzCAYAAAA6oTAqAAAAEXRFWHRTb2Z0d2FyZQBwbmdjcnVzaEB1SfMAAABQSURBVGje7dSxCQBACARB+2/ab8BEeQNhFi6WSYzYLYudDQYGBgYGBgYGBgYGBgYGBgZmcvDqYGBgmhivGQYGBgYGBgYGBgYGBgYGBgbmQw+P/eMrC5UTVAAAAABJRU5ErkJggg==',
+            uri: 'https://fullcourt-training.com/thumbnails/3.webp',
           }}
         />
-        <View style={styles.categories}>
-          <Text style={styles.categoryText}>"Test"</Text>
-        </View>
         <View style={styles.content}>
-          <Text variant="title">{drill.title}</Text>
+          <Text variant="title">{drill.name}</Text>
           <View style={styles.info}>
-            <Text>{drill.type} drill</Text>
-            <Text>
-              {`${drill.players} `}
-              <MaterialCommunityIcons
-                name="account-group"
-                size={16}
-                color={theme.colors.text}
-              />
-            </Text>
+            <Text>{drill.category}</Text>
           </View>
         </View>
       </Pressable>

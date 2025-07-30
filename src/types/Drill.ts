@@ -1,9 +1,8 @@
 export type Drill = {
   id: number;
-  title: string;
+  name: string;
   link: string;
-  type: string;
-  players: number;
-  content: string;
+  category: string;
+  description: string;
   premium: boolean;
 };

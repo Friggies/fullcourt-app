@@ -46,10 +46,10 @@ export default function Drills() {
       let query = supabase.from('drills').select('*').range(start, end);
 
       if (debouncedSearch) {
-        query = query.ilike('title', `%${debouncedSearch}%`);
+        query = query.ilike('name', `%${debouncedSearch}%`);
       }
       if (filters.type) {
-        query = query.eq('type', filters.type);
+        query = query.eq('category', filters.type);
       }
 
       const { data, error } = await query;
@@ -131,6 +131,7 @@ export default function Drills() {
           </View>
         </Modal>
         <FlatList
+          numColumns={2}
           data={drills}
           keyExtractor={(item) => item.id.toString()}
           renderItem={({ item }) => <Card drill={item} />}
@@ -153,6 +154,11 @@ export default function Drills() {
           ListFooterComponent={loading ? <ActivityIndicator /> : null}
           style={styles.flatlist}
           contentContainerStyle={{ gap: 8 }}
+          columnWrapperStyle={{ gap: '2%' }}
+          showsVerticalScrollIndicator={false}
+          showsHorizontalScrollIndicator={false}
+          keyboardShouldPersistTaps="handled"
+          keyboardDismissMode="on-drag"
         />
       </Screen>
     </>

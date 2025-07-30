@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, StyleSheet, ImageBackground, ScrollView } from 'react-native';
+import { View, StyleSheet, ImageBackground } from 'react-native';
 
 type ScreenProps = {
   children: React.ReactNode;
