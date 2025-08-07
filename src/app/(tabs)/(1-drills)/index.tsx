@@ -11,7 +11,6 @@ import {
 } from 'react-native';
 import { Stack } from 'expo-router';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
-import Screen from '../../../components/pages/drills/Screen';
 import Card from '../../../components/pages/drills/Card';
 import { supabase } from '../../../lib/supabase';
 import { Drill } from '../../../types/Drill';
@@ -109,58 +108,53 @@ export default function Drills() {
           ),
         }}
       />
-      <Screen>
-        <Modal visible={showFilterModal} transparent animationType="slide">
-          <View style={styles.modalOverlay}>
-            <View style={styles.modalContent}>
-              {['Warm-up', 'Offensive', 'Defensive'].map((type) => (
-                <Button
-                  key={type}
-                  title={type}
-                  onPress={() => setFilters({ type })}
-                />
-              ))}
-              <View style={styles.modalButtons}>
-                <Button title="Clear" onPress={() => setFilters({})} />
-                <Button
-                  title="Apply"
-                  onPress={() => setShowFilterModal(false)}
-                />
-              </View>
+      <Modal visible={showFilterModal} transparent animationType="slide">
+        <View style={styles.modalOverlay}>
+          <View style={styles.modalContent}>
+            {['Warm-up', 'Offensive', 'Defensive'].map((type) => (
+              <Button
+                key={type}
+                title={type}
+                onPress={() => setFilters({ type })}
+              />
+            ))}
+            <View style={styles.modalButtons}>
+              <Button title="Clear" onPress={() => setFilters({})} />
+              <Button title="Apply" onPress={() => setShowFilterModal(false)} />
             </View>
           </View>
-        </Modal>
-        <FlatList
-          numColumns={2}
-          data={drills}
-          keyExtractor={(item) => item.id.toString()}
-          renderItem={({ item }) => <Card drill={item} />}
-          onEndReached={() => fetchDrills()}
-          onEndReachedThreshold={0.5}
-          ListHeaderComponent={
-            searchVisible ? (
-              <TextInput
-                style={styles.searchInputHeader}
-                placeholder="Search drills..."
-                value={searchText}
-                onChangeText={setSearchText}
-                ref={searchInputRef}
-                returnKeyType="search"
-              />
-            ) : (
-              <></>
-            )
-          }
-          ListFooterComponent={loading ? <ActivityIndicator /> : null}
-          style={styles.flatlist}
-          contentContainerStyle={{ gap: 8 }}
-          columnWrapperStyle={{ gap: '2%' }}
-          showsVerticalScrollIndicator={false}
-          showsHorizontalScrollIndicator={false}
-          keyboardShouldPersistTaps="handled"
-          keyboardDismissMode="on-drag"
-        />
-      </Screen>
+        </View>
+      </Modal>
+      <FlatList
+        numColumns={2}
+        data={drills}
+        keyExtractor={(item) => item.id.toString()}
+        renderItem={({ item }) => <Card drill={item} />}
+        onEndReached={() => fetchDrills()}
+        onEndReachedThreshold={0.5}
+        ListHeaderComponent={
+          searchVisible ? (
+            <TextInput
+              style={styles.searchInputHeader}
+              placeholder="Search drills..."
+              value={searchText}
+              onChangeText={setSearchText}
+              ref={searchInputRef}
+              returnKeyType="search"
+            />
+          ) : (
+            <></>
+          )
+        }
+        ListFooterComponent={loading ? <ActivityIndicator /> : null}
+        style={styles.flatlist}
+        contentContainerStyle={{ gap: 8 }}
+        columnWrapperStyle={{ gap: '2%' }}
+        showsVerticalScrollIndicator={false}
+        showsHorizontalScrollIndicator={false}
+        keyboardShouldPersistTaps="handled"
+        keyboardDismissMode="on-drag"
+      />
     </>
   );
 }

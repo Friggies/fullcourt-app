@@ -5,7 +5,7 @@ export const makeStyles = (theme: Theme) =>
   StyleSheet.create({
     card: {
       width: '49%',
-      backgroundColor: theme.colors.background,
+      backgroundColor: theme.colors.backgroundAccent,
       borderRadius: 4,
       overflow: 'hidden',
       flexDirection: 'column',
@@ -16,17 +16,19 @@ export const makeStyles = (theme: Theme) =>
       aspectRatio: 0.5625,
     },
     content: {
-      padding: 16,
+      padding: 8,
       width: '100%',
+      flex: 1,
     },
     info: {
+      marginTop: 'auto',
       flexDirection: 'row',
       justifyContent: 'space-between',
       alignItems: 'baseline',
     },
     searchInputHeader: {
       flex: 1,
-      backgroundColor: theme.colors.background,
+      backgroundColor: theme.colors.backgroundAccent,
       borderRadius: 4,
       padding: 8,
     },

@@ -2,13 +2,13 @@ import React, { useEffect, useState, useCallback } from 'react';
 import { View, ScrollView, ActivityIndicator } from 'react-native';
 import { Stack, useLocalSearchParams } from 'expo-router';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
-import Screen from '../../../components/pages/drills/Screen';
 import { supabase } from '../../../lib/supabase';
 import { Drill } from '../../../types/Drill';
 import { useTheme } from '../../../contexts/theme';
 import { Text } from '../../../components/common/Text';
 import Markdown from 'react-native-markdown-display';
 import Video from '../../../components/pages/drills/Video';
+import { WebView } from 'react-native-webview';
 
 export default function DrillDetail() {
   const { drillId } = useLocalSearchParams();
@@ -44,29 +44,19 @@ export default function DrillDetail() {
           title: drill ? drill.name : 'Drill Details',
         }}
       />
-      <Screen>
-        {loading ? (
-          <ActivityIndicator size="large" />
-        ) : drill ? (
-          <ScrollView>
-            <View>
-              <Text variant="title">{drill.name}</Text>
-              <View>
-                <Text>{drill.category}</Text>
-                <MaterialCommunityIcons
-                  name="account-group"
-                  size={16}
-                  color={theme.colors.text}
-                />
-              </View>
-              <Video source={drill.link} />
-              <Markdown>{drill.description}</Markdown>
-            </View>
-          </ScrollView>
-        ) : (
-          <Text>No drill found.</Text>
-        )}
-      </Screen>
+      {loading ? (
+        <ActivityIndicator size="large" />
+      ) : drill ? (
+        <ScrollView>
+          <View>
+            <Video link={drill.link} id={drill.id} />
+            <Text variant="label">{drill.category}</Text>
+            <Markdown>{drill.description}</Markdown>
+          </View>
+        </ScrollView>
+      ) : (
+        <Text>No drill found.</Text>
+      )}
     </>
   );
 }

@@ -32,9 +32,9 @@ export default function Card({ drill }: CardProps) {
           }}
         />
         <View style={styles.content}>
-          <Text variant="title">{drill.name}</Text>
+          <Text>{drill.name}</Text>
           <View style={styles.info}>
-            <Text>{drill.category}</Text>
+            <Text variant="label">{drill.category}</Text>
           </View>
         </View>
       </Pressable>

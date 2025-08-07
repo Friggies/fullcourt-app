@@ -1,86 +1,94 @@
 // components/VideoPlayer.js
-import React, { useState, useEffect } from 'react';
-import { View, ActivityIndicator, StyleSheet, Dimensions } from 'react-native';
+import React, { useEffect, useRef, useState } from 'react';
+import {
+  View,
+  ActivityIndicator,
+  StyleSheet,
+  Dimensions,
+  PanResponder,
+} from 'react-native';
 import { WebView } from 'react-native-webview';
 import { useVideoPlayer, VideoView } from 'expo-video';
 import { supabase } from '../../../lib/supabase';
+import { Text } from '../../common/Text';
 
 const { width } = Dimensions.get('window');
-const YT_REGEX = /(?:youtube\.com\/.*v=|youtu\.be\/)([A-Za-z0-9_-]{11})/;
 
-export default function Video({ source }: { source: string }) {
-  // 1) Always mount the hook, even before we know the URI
-  const player = useVideoPlayer(null, () => {
-    /* no-op */
-  });
-
-  const [uri, setUri] = useState<string | null>(null);
+export default function Video({ link, id }: { link: string; id: number }) {
+  const [videoUri, setVideoUri] = useState<string>();
   const [loading, setLoading] = useState(true);
+  const player = useVideoPlayer({ uri: videoUri });
 
-  // 2) Fetch signed URL (or use direct) and replaceAsync
   useEffect(() => {
-    (async () => {
-      let signedUrl: string;
+    const loadVideo = async () => {
+      setLoading(true);
+      let finalSource = link?.trim();
 
-      if (/^https?:\/\//.test(source) && !YT_REGEX.test(source)) {
-        signedUrl = source;
-      } else if (!YT_REGEX.test(source)) {
+      if (!finalSource) {
         const { data, error } = await supabase.storage
-          .from('videos')
-          .createSignedUrl(source, 60);
+          .from('premium-drills')
+          .createSignedUrl(`${id}.mp4`, 60 * 60 * 5);
 
-        if (error) {
-          console.error('Supabase error:', error);
+        if (error || !data?.signedUrl) {
+          console.error('Error fetching Supabase video:', error);
+          setLoading(false);
           return;
         }
-        signedUrl = data.signedUrl;
-      } else {
-        signedUrl = source;
+
+        finalSource = data.signedUrl;
       }
 
-      setUri(signedUrl);
+      setVideoUri(finalSource);
       setLoading(false);
+    };
 
-      // If it's not a YouTube link, load into the player
-      if (!YT_REGEX.test(source)) {
-        await player.replaceAsync(signedUrl); // :contentReference[oaicite:2]{index=2}
-        player.play();
-      }
-    })();
-  }, [source]);
+    loadVideo();
+  }, [link, id]);
 
-  // 3) Render loading
-  if (loading || !uri) {
+  if (loading) {
     return (
       <View style={styles.loader}>
-        <ActivityIndicator size="large" />
+        <ActivityIndicator size="large" color="#fff" />
       </View>
     );
   }
 
-  // 4) YouTube via WebView
-  const match = uri.match(YT_REGEX);
-  if (match) {
-    const embedUrl = `https://www.youtube.com/embed/${match[1]}?controls=1`;
+  // If no videoUri at all, show error or fallback text
+  if (!videoUri) {
+    return (
+      <View style={styles.container}>
+        <Text>No video source available</Text>
+      </View>
+    );
+  }
+
+  const isPremium = videoUri.includes('supabase');
+  console.log(videoUri, isPremium);
+
+  if (!isPremium) {
     return (
       <View style={styles.container}>
         <WebView
           style={styles.webview}
           javaScriptEnabled
-          source={{ uri: embedUrl }}
+          scrollEnabled={false}
+          nestedScrollEnabled={false}
+          source={{
+            uri: `https://www.youtube.com/embed/${link}?rel=0&modestbranding=1&mute=1`,
+          }}
         />
       </View>
     );
   }
 
-  // 5) Direct media via expo-video
   return (
     <View style={styles.container}>
       <VideoView
         style={styles.video}
         player={player}
-        nativeControls // show play/pause & scrubber :contentReference[oaicite:3]{index=3}
-        allowsFullscreen // fullscreen button :contentReference[oaicite:4]{index=4}
+        nativeControls
+        allowsFullscreen
+        allowsPictureInPicture
         contentFit="contain"
       />
     </View>
@@ -89,9 +97,9 @@ export default function Video({ source }: { source: string }) {
 
 const styles = StyleSheet.create({
   container: {
+    position: 'relative',
     width,
-    aspectRatio: 16 / 9,
-    backgroundColor: '#000',
+    aspectRatio: 9 / 16,
   },
   video: {
     width: '100%',
@@ -105,5 +113,6 @@ const styles = StyleSheet.create({
     aspectRatio: 16 / 9,
     justifyContent: 'center',
     alignItems: 'center',
+    backgroundColor: '#000',
   },
 });

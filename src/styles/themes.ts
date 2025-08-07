@@ -6,6 +6,7 @@ export type TextStyle = {
 export type Theme = {
   colors: {
     background: string;
+    backgroundAccent: string;
     text: string;
     faded: string;
   };
@@ -23,6 +24,7 @@ const baseTextStyles: Record<string, TextStyle> = {
 export const lightTheme: Theme = {
   colors: {
     background: '#f2f2f2',
+    backgroundAccent: '#ffffff',
     text: '#000000',
     faded: '#eeeeee',
   },
@@ -34,6 +36,7 @@ export const lightTheme: Theme = {
 export const darkTheme: Theme = {
   colors: {
     background: '#0F0F0F',
+    backgroundAccent: '#000000',
     text: '#ffffff',
     faded: '#514f4f',
   },

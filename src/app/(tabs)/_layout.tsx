@@ -6,13 +6,13 @@ export default function TabLayout() {
     <Tabs
       screenOptions={{
         headerShown: false,
-        tabBarActiveTintColor: '#8C3428',
+        tabBarActiveTintColor: '#62241c',
       }}
     >
       <Tabs.Screen
         name="(1-drills)"
         options={{
-          title: 'Drills',
+          title: 'Playbook',
           tabBarIcon: ({ color }) => (
             <MaterialCommunityIcons size={26} name="basketball" color={color} />
           ),
@@ -30,7 +30,7 @@ export default function TabLayout() {
       <Tabs.Screen
         name="(3-profile)"
         options={{
-          title: 'Profile',
+          title: 'My Profile',
           tabBarIcon: ({ color }) => (
             <MaterialCommunityIcons size={28} name="account" color={color} />
           ),
