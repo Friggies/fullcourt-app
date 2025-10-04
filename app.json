@@ -1,7 +1,7 @@
 {
   "expo": {
     "name": "FULLCOURT TRAINING",
-    "scheme": "com.fullcourt_training",
+    "scheme": "com.fullcourttraining.app",
     "slug": "fullcourt-training",
     "version": "1.0.0",
     "orientation": "portrait",
@@ -14,7 +14,8 @@
       "backgroundColor": "#ffffff"
     },
     "ios": {
-      "supportsTablet": true
+      "supportsTablet": true,
+      "bundleIdentifier": "com.fullcourttraining.app"
     },
     "android": {
       "adaptiveIcon": {
@@ -22,7 +23,7 @@
         "backgroundColor": "#ffffff"
       },
       "edgeToEdgeEnabled": true,
-      "package": "com.anonymous.fullcourtapp"
+      "package": "com.fullcourttraining.app"
     },
     "web": {
       "favicon": "./assets/favicon.png"
@@ -35,7 +36,8 @@
           "supportsBackgroundPlayback": true,
           "supportsPictureInPicture": true
         }
-      ]
+      ],
+      "expo-font"
     ],
     "experiments": {
       "typedRoutes": true

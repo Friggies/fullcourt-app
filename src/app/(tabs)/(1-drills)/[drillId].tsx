@@ -1,14 +1,12 @@
 import React, { useEffect, useState, useCallback } from 'react';
 import { View, ScrollView, ActivityIndicator } from 'react-native';
 import { Stack, useLocalSearchParams } from 'expo-router';
-import { MaterialCommunityIcons } from '@expo/vector-icons';
 import { supabase } from '../../../lib/supabase';
 import { Drill } from '../../../types/Drill';
 import { useTheme } from '../../../contexts/theme';
 import { Text } from '../../../components/common/Text';
 import Markdown from 'react-native-markdown-display';
 import Video from '../../../components/pages/drills/Video';
-import { WebView } from 'react-native-webview';
 
 export default function DrillDetail() {
   const { drillId } = useLocalSearchParams();
@@ -49,9 +47,9 @@ export default function DrillDetail() {
       ) : drill ? (
         <ScrollView>
           <View>
-            <Video link={drill.link} id={drill.id} />
             <Text variant="label">{drill.category}</Text>
             <Markdown>{drill.description}</Markdown>
+            <Video link={drill.link} id={drill.id} />
           </View>
         </ScrollView>
       ) : (

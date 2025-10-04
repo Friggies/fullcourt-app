@@ -9,25 +9,32 @@
     "web": "expo start --web"
   },
   "dependencies": {
-    "@react-native-async-storage/async-storage": "2.1.2",
+    "@expo/metro-runtime": "~6.1.2",
+    "@react-native-async-storage/async-storage": "2.2.0",
     "@supabase/supabase-js": "^2.49.4",
-    "expo": "~53.0.9",
-    "expo-font": "~13.3.1",
-    "expo-router": "~5.0.6",
-    "expo-splash-screen": "~0.30.8",
-    "react": "19.0.0",
-    "react-dom": "19.0.0",
-    "react-native": "0.79.2",
+    "expo": "54.0.12",
+    "expo-constants": "~18.0.9",
+    "expo-font": "~14.0.8",
+    "expo-linking": "~8.0.8",
+    "expo-router": "~6.0.10",
+    "expo-splash-screen": "~31.0.10",
+    "expo-status-bar": "~3.0.8",
+    "expo-video": "~3.0.11",
+    "react": "19.1.0",
+    "react-dom": "19.1.0",
+    "react-native": "0.81.4",
     "react-native-markdown-display": "^7.0.2",
-    "react-native-svg": "^15.11.2",
-    "react-native-web": "^0.20.0",
-    "expo-video": "~2.1.8"
+    "react-native-safe-area-context": "~5.6.0",
+    "react-native-screens": "~4.16.0",
+    "react-native-svg": "15.12.1",
+    "react-native-web": "0.21.1",
+    "react-native-webview": "13.15.0"
   },
   "devDependencies": {
     "@babel/core": "^7.25.2",
-    "@types/react": "~19.0.10",
+    "@types/react": "19.1.17",
     "prettier": "^3.5.3",
-    "typescript": "~5.8.3"
+    "typescript": "5.9.3"
   },
   "private": true
 }

@@ -1,12 +1,6 @@
 // components/VideoPlayer.js
 import React, { useEffect, useRef, useState } from 'react';
-import {
-  View,
-  ActivityIndicator,
-  StyleSheet,
-  Dimensions,
-  PanResponder,
-} from 'react-native';
+import { View, ActivityIndicator, StyleSheet, Dimensions } from 'react-native';
 import { WebView } from 'react-native-webview';
 import { useVideoPlayer, VideoView } from 'expo-video';
 import { supabase } from '../../../lib/supabase';
