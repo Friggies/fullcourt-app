@@ -1,10 +1,4 @@
-import React, {
-  createContext,
-  useContext,
-  useEffect,
-  useMemo,
-  useState,
-} from 'react';
+import React, { createContext, useContext, useMemo, useState } from 'react';
 import { Pressable } from 'react-native';
 import { Stack, useRouter } from 'expo-router';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
@@ -21,7 +15,7 @@ type DrillsUIContextType = {
   setFilterCategories: (cats: string[]) => void;
   filterPlayers: number | '';
   setFilterPlayers: (n: number | '') => void;
-  filterType: string; // '' | 'Drill' | 'Play'
+  filterType: string;
   setFilterType: (t: string) => void;
 };
 
@@ -42,41 +36,18 @@ export default function DrillsLayout() {
 
   const [searchVisible, _setSearchVisible] = useState(false);
   const [searchText, _setSearchText] = useState('');
-
   const [filterCategories, _setFilterCategories] = useState<string[]>([]);
   const [filterPlayers, _setFilterPlayers] = useState<number | ''>('');
   const [filterType, _setFilterType] = useState<string>('');
 
-  useEffect(() => {
-    console.log('[Layout] mounted');
-    return () => console.log('[Layout] unmounted');
-  }, []);
-
   const setSearchVisible = (v: boolean) => {
-    console.log('[Layout] setSearchVisible ->', v);
     _setSearchVisible(v);
-    if (v) {
-      console.log('[Layout] clearing search text (opening search)');
-      _setSearchText('');
-    }
+    if (v) _setSearchText('');
   };
-  const setSearchText = (t: string) => {
-    console.log('[Layout] setSearchText ->', t);
-    _setSearchText(t);
-  };
-
-  const setFilterCategories = (cats: string[]) => {
-    console.log('[Layout] setFilterCategories ->', cats);
-    _setFilterCategories(cats);
-  };
-  const setFilterPlayers = (n: number | '') => {
-    console.log('[Layout] setFilterPlayers ->', n);
-    _setFilterPlayers(n);
-  };
-  const setFilterType = (t: string) => {
-    console.log('[Layout] setFilterType ->', t);
-    _setFilterType(t);
-  };
+  const setSearchText = (t: string) => _setSearchText(t);
+  const setFilterCategories = (cats: string[]) => _setFilterCategories(cats);
+  const setFilterPlayers = (n: number | '') => _setFilterPlayers(n);
+  const setFilterType = (t: string) => _setFilterType(t);
 
   const value = useMemo<DrillsUIContextType>(
     () => ({
@@ -94,51 +65,57 @@ export default function DrillsLayout() {
     [searchVisible, searchText, filterCategories, filterPlayers, filterType]
   );
 
-  const HeaderLeft = () => (
-    <Pressable
-      accessibilityRole="button"
-      onPress={() => value.setSearchVisible(!value.searchVisible)}
-      style={{ paddingHorizontal: 8 }}
-    >
-      <MaterialCommunityIcons
-        name={value.searchVisible ? 'close' : 'magnify'}
-        size={24}
-        color="black"
-      />
-    </Pressable>
-  );
-
-  const HeaderRight = () => (
-    <Pressable
-      accessibilityRole="button"
-      onPress={() => {
-        router.push('/filters');
-      }}
-      style={{ paddingHorizontal: 8 }}
-    >
-      <MaterialCommunityIcons name="filter" size={24} color="black" />
-    </Pressable>
-  );
-
   return (
     <DrillsUIContext.Provider value={value}>
-      <Stack
-        screenOptions={{
-          headerLeft: () => <HeaderLeft />,
-          headerRight: () => <HeaderRight />,
-        }}
-      >
-        <Stack.Screen name="index" options={{ title: 'All Drills' }} />
+      <Stack>
+        <Stack.Screen
+          name="index"
+          options={{
+            title: 'All Drills',
+            headerLeft: ({ tintColor }) => (
+              <Pressable
+                accessibilityRole="button"
+                onPress={() => value.setSearchVisible(!value.searchVisible)}
+                hitSlop={{ top: 8, bottom: 8, left: 8, right: 8 }}
+                style={{ paddingHorizontal: 8 }}
+              >
+                <MaterialCommunityIcons
+                  name={value.searchVisible ? 'close' : 'magnify'}
+                  size={24}
+                  color={tintColor ?? 'black'}
+                />
+              </Pressable>
+            ),
+            headerRight: ({ tintColor }) => (
+              <Pressable
+                accessibilityRole="button"
+                onPress={() => router.push('/filters')}
+                hitSlop={{ top: 8, bottom: 8, left: 8, right: 8 }}
+                style={{ paddingHorizontal: 8 }}
+              >
+                <MaterialCommunityIcons
+                  name="filter"
+                  size={24}
+                  color={tintColor ?? 'black'}
+                />
+              </Pressable>
+            ),
+          }}
+        />
+
         <Stack.Screen
           name="filters"
-          options={{ title: 'Filters', presentation: 'modal' }}
+          options={{
+            title: 'Filters',
+            presentation: 'modal',
+          }}
         />
+
         <Stack.Screen
           name="[drillId]"
           options={{
             title: 'Drill Details',
-            headerLeft: () => null,
-            headerRight: () => null,
+            headerBackVisible: false,
           }}
         />
       </Stack>
