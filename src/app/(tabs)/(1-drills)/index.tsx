@@ -1,160 +1,361 @@
-// app/pages/drills/index.tsx
-import React, { useEffect, useState, useCallback, useRef } from 'react';
+import React, {
+  useCallback,
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+} from 'react';
 import {
-  View,
-  TextInput,
-  Pressable,
-  Modal,
-  Button,
   ActivityIndicator,
   FlatList,
+  Pressable,
+  TextInput,
+  View,
 } from 'react-native';
 import { Stack } from 'expo-router';
-import { MaterialCommunityIcons } from '@expo/vector-icons';
 import Card from '../../../components/pages/drills/Card';
 import { supabase } from '../../../lib/supabase';
-import { Drill } from '../../../types/Drill';
 import { useDebounce } from '../../../lib/hooks/debounce';
 import { useTheme } from '../../../contexts/theme';
 import { makeStyles } from '../../../styles/makeStyles';
+import { Text } from '../../../components/common/Text';
+import { useDrillsUI } from './_layout';
+
+type DrillRow = {
+  id: number;
+  name: string;
+  premium: boolean;
+  type: string;
+  description: string;
+  link: string;
+  players: number;
+  categories?: { name: string | null }[];
+};
+
+type DrillListItem = {
+  id: number;
+  name: string;
+  premium: boolean;
+  type: string;
+  description: string;
+  link: string;
+  players: number;
+  categories: string[];
+};
+
+const TIMEOUT_MS = 12000;
+
+const describeError = (err: any) => {
+  if (!err) return { info: 'no error object' };
+  return {
+    name: err.name,
+    message: err.message,
+    code: err.code,
+    details: err.details,
+    hint: err.hint,
+    status: err.status,
+  };
+};
+
+const attachAbort = (q: any, signal: AbortSignal) => {
+  // postgrest-js supports .abortSignal(); if not present, just return q
+  return typeof q.abortSignal === 'function' ? q.abortSignal(signal) : q;
+};
 
 export default function Drills() {
   const { theme } = useTheme();
   const styles = makeStyles(theme);
 
-  const PAGE_SIZE = 10;
-  const [drills, setDrills] = useState<Drill[]>([]);
-  const [loading, setLoading] = useState(false);
-  const [searchText, setSearchText] = useState('');
+  const {
+    searchVisible,
+    searchText,
+    setSearchText,
+    filterCategories,
+    filterPlayers,
+    filterType,
+  } = useDrillsUI();
+
   const debouncedSearch = useDebounce(searchText, 300);
-  const [filters, setFilters] = useState<{ type?: string }>({});
-  const [from, setFrom] = useState(0);
-  const [hasMore, setHasMore] = useState(true);
-  const [showFilterModal, setShowFilterModal] = useState(false);
-  const [searchVisible, setSearchVisible] = useState(false);
   const searchInputRef = useRef<TextInput>(null);
 
-  const fetchDrills = useCallback(
-    async (reset = false) => {
-      if (loading || (!hasMore && !reset)) return;
-      setLoading(true);
+  const [loading, setLoading] = useState(false);
+  const [drills, setDrills] = useState<DrillListItem[]>([]);
+  const [error, setError] = useState<unknown>(null);
+  const [timedOut, setTimedOut] = useState(false);
+  const [usedFallback, setUsedFallback] = useState(false);
 
-      const start = reset ? 0 : from;
-      const end = start + PAGE_SIZE - 1;
+  const mounted = useRef(true);
+  useEffect(() => {
+    console.log('[Drills] mounted');
+    return () => {
+      mounted.current = false;
+      console.log('[Drills] unmounted');
+    };
+  }, []);
 
-      let query = supabase.from('drills').select('*').range(start, end);
+  const normalize = (data: DrillRow[]): DrillListItem[] =>
+    (data ?? []).map((d) => ({
+      id: d.id,
+      name: d.name,
+      type: d.type,
+      premium: d.premium,
+      description: d.description,
+      link: d.link,
+      players: d.players,
+      categories: Array.isArray(d.categories)
+        ? ([
+            ...new Set(d.categories.map((c) => c?.name).filter(Boolean)),
+          ] as string[])
+        : [],
+    }));
 
-      if (debouncedSearch) {
-        query = query.ilike('name', `%${debouncedSearch}%`);
+  const fetchDrills = useCallback(async () => {
+    console.log('[Drills] fetch start');
+    setLoading(true);
+    setError(null);
+    setTimedOut(false);
+    setUsedFallback(false);
+
+    const ac = new AbortController();
+    const timeout = setTimeout(() => {
+      console.warn('[Drills] fetch timeout after', TIMEOUT_MS, 'ms');
+      setTimedOut(true);
+      ac.abort();
+    }, TIMEOUT_MS);
+
+    try {
+      // Full query including categories relation
+      let q = supabase
+        .from('drills')
+        .select(
+          `
+          id,
+          name,
+          type,
+          premium,
+          description,
+          link,
+          players,
+          categories ( name )
+        `
+        )
+        .order('id', { ascending: true });
+
+      const { data, error, status, statusText } = await attachAbort(
+        q,
+        ac.signal
+      );
+      if (!mounted.current) {
+        console.log('[Drills] fetch response ignored (unmounted)');
+        return;
       }
-      if (filters.type) {
-        query = query.eq('category', filters.type);
-      }
 
-      const { data, error } = await query;
-      if (!error) {
-        setDrills((prev) => (reset ? data! : [...prev, ...data!]));
-        setHasMore(data!.length === PAGE_SIZE);
-        setFrom(start + data!.length);
+      if (error) {
+        console.error('[Drills] fetch error:', describeError(error), {
+          status,
+          statusText,
+        });
+        // Fallback: try without the relation to identify join/permissions issues
+        console.log(
+          '[Drills] attempting fallback query without categories relation'
+        );
+        setUsedFallback(true);
+
+        const ac2 = new AbortController();
+        const timeout2 = setTimeout(() => {
+          console.warn('[Drills] fallback timeout after', TIMEOUT_MS, 'ms');
+          ac2.abort();
+        }, TIMEOUT_MS);
+
+        try {
+          const simple = await attachAbort(
+            supabase
+              .from('drills')
+              .select('id, name, type, premium, description, link, players')
+              .order('id', { ascending: true }),
+            ac2.signal
+          );
+
+          if (!mounted.current) return;
+
+          if (simple.error) {
+            console.error(
+              '[Drills] fallback error:',
+              describeError(simple.error),
+              {
+                status: simple.status,
+                statusText: simple.statusText,
+              }
+            );
+            setError(simple.error);
+            setDrills([]);
+          } else {
+            console.log('[Drills] fallback ok', {
+              status: simple.status,
+              rows: (simple.data ?? []).length,
+            });
+            setDrills(
+              (simple.data ?? []).map((d: any) => ({
+                ...d,
+                categories: [],
+              }))
+            );
+          }
+        } finally {
+          clearTimeout(timeout2);
+        }
       } else {
-        console.error(error);
+        console.log('[Drills] fetch ok', {
+          status,
+          statusText,
+          rows: (data ?? []).length,
+          firstId: data?.[0]?.id ?? null,
+        });
+        setDrills(normalize((data as DrillRow[]) ?? []));
       }
-      setLoading(false);
-    },
-    [debouncedSearch, filters, from, hasMore, loading]
-  );
+    } catch (e) {
+      if (!mounted.current) return;
+      console.error('[Drills] fetch exception:', describeError(e));
+      setError(e);
+      setDrills([]);
+    } finally {
+      clearTimeout(timeout);
+      if (mounted.current) {
+        setLoading(false);
+        console.log('[Drills] fetch end');
+      }
+    }
+  }, []);
 
   useEffect(() => {
-    setFrom(0);
-    setHasMore(true);
-    fetchDrills(true);
-  }, [debouncedSearch, filters]);
+    console.log('[Drills] initial load');
+    fetchDrills();
+  }, [fetchDrills]);
 
   useEffect(() => {
-    setSearchText('');
+    console.log('[Drills] searchVisible ->', searchVisible);
     if (searchVisible) {
       searchInputRef.current?.focus();
-    } else {
-      setFrom(0);
-      setHasMore(true);
-      fetchDrills(true);
+      console.log('[Drills] focused search input');
     }
   }, [searchVisible]);
 
+  const filtered = useMemo(() => {
+    const search = (debouncedSearch ?? '').trim().toLowerCase();
+    console.log('[Drills] applying filters', {
+      search,
+      filterType,
+      filterCategories,
+      filterPlayers,
+      total: drills.length,
+    });
+
+    const out = drills.filter((d) => {
+      const matchesSearch = !search || d.name.toLowerCase().includes(search);
+      const matchesType = !filterType || d.type === filterType;
+      const matchesCategories =
+        filterCategories.length === 0 ||
+        filterCategories.some((cat) => d.categories.includes(cat));
+      const matchesPlayers =
+        filterPlayers === '' ||
+        (typeof filterPlayers === 'number' &&
+          (d.players ?? 0) <= filterPlayers);
+      return (
+        matchesSearch && matchesType && matchesCategories && matchesPlayers
+      );
+    });
+
+    console.log('[Drills] filtered results:', out.length);
+    return out;
+  }, [drills, debouncedSearch, filterType, filterCategories, filterPlayers]);
+
   return (
     <>
-      <Stack.Screen
-        options={{
-          headerLeft: () => (
-            <Pressable onPress={() => setSearchVisible((v) => !v)}>
-              {searchVisible ? (
-                <MaterialCommunityIcons name="close" size={24} color="black" />
-              ) : (
-                <MaterialCommunityIcons
-                  name="magnify"
-                  size={24}
-                  color="black"
-                />
-              )}
-            </Pressable>
-          ),
-          headerRight: () => (
-            <Pressable
-              style={{ marginRight: 8 }}
-              onPress={() => setShowFilterModal(true)}
-            >
-              <MaterialCommunityIcons name="filter" size={24} color="black" />
-            </Pressable>
-          ),
-        }}
-      />
-      <Modal visible={showFilterModal} transparent animationType="slide">
-        <View style={styles.modalOverlay}>
-          <View style={styles.modalContent}>
-            {['Warm-up', 'Offensive', 'Defensive'].map((type) => (
-              <Button
-                key={type}
-                title={type}
-                onPress={() => setFilters({ type })}
-              />
-            ))}
-            <View style={styles.modalButtons}>
-              <Button title="Clear" onPress={() => setFilters({})} />
-              <Button title="Apply" onPress={() => setShowFilterModal(false)} />
-            </View>
-          </View>
+      <Stack.Screen options={{}} />
+
+      {loading && drills.length === 0 ? (
+        <ActivityIndicator style={{ marginTop: 24 }} />
+      ) : error ? (
+        <View
+          style={{ alignItems: 'center', marginTop: 24, paddingHorizontal: 16 }}
+        >
+          <Text style={{ textAlign: 'center', marginBottom: 8 }}>
+            Failed to load drills.
+          </Text>
+          <Text
+            style={{
+              textAlign: 'center',
+              fontSize: 12,
+              opacity: 0.7,
+              marginBottom: 12,
+            }}
+          >
+            {JSON.stringify({
+              timeout: timedOut,
+              fallback: usedFallback,
+              ...describeError(error),
+            })}
+          </Text>
+          <Pressable
+            onPress={() => {
+              console.log('[Drills] retry pressed');
+              fetchDrills();
+            }}
+            disabled={loading}
+            style={{
+              paddingHorizontal: 16,
+              paddingVertical: 10,
+              borderWidth: 1,
+              borderRadius: 8,
+              opacity: loading ? 0.6 : 1,
+            }}
+          >
+            <Text>{loading ? 'Retrying…' : 'Retry'}</Text>
+          </Pressable>
         </View>
-      </Modal>
-      <FlatList
-        numColumns={2}
-        data={drills}
-        keyExtractor={(item) => item.id.toString()}
-        renderItem={({ item }) => <Card drill={item} />}
-        onEndReached={() => fetchDrills()}
-        onEndReachedThreshold={0.5}
-        ListHeaderComponent={
-          searchVisible ? (
-            <TextInput
-              style={styles.searchInputHeader}
-              placeholder="Search drills..."
-              value={searchText}
-              onChangeText={setSearchText}
-              ref={searchInputRef}
-              returnKeyType="search"
-            />
-          ) : (
-            <></>
-          )
-        }
-        ListFooterComponent={loading ? <ActivityIndicator /> : null}
-        style={styles.flatlist}
-        contentContainerStyle={{ gap: 8 }}
-        columnWrapperStyle={{ gap: '2%' }}
-        showsVerticalScrollIndicator={false}
-        showsHorizontalScrollIndicator={false}
-        keyboardShouldPersistTaps="handled"
-        keyboardDismissMode="on-drag"
-      />
+      ) : (
+        <FlatList
+          numColumns={2}
+          data={filtered}
+          keyExtractor={(item) => String(item.id)}
+          renderItem={({ item }) => <Card drill={item as any} />}
+          ListHeaderComponent={
+            searchVisible ? (
+              <TextInput
+                style={styles.searchInputHeader}
+                placeholder="Search drills..."
+                value={searchText}
+                onChangeText={(t) => {
+                  console.log('[Drills] change search text ->', t);
+                  setSearchText(t);
+                }}
+                ref={searchInputRef}
+                returnKeyType="search"
+              />
+            ) : null
+          }
+          ListEmptyComponent={
+            !loading ? (
+              <Text style={{ textAlign: 'center', marginTop: 32 }}>
+                No drills found.
+              </Text>
+            ) : null
+          }
+          ListFooterComponent={loading ? <ActivityIndicator /> : null}
+          style={styles.flatlist}
+          contentContainerStyle={{ gap: 8, flexGrow: 1 }}
+          columnWrapperStyle={{ gap: '2%' }}
+          showsVerticalScrollIndicator={false}
+          showsHorizontalScrollIndicator={false}
+          keyboardShouldPersistTaps="handled"
+          keyboardDismissMode="on-drag"
+          refreshing={loading && drills.length > 0}
+          onRefresh={() => {
+            console.log('[Drills] pull-to-refresh');
+            fetchDrills();
+          }}
+        />
+      )}
     </>
   );
 }
