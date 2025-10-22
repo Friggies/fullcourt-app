@@ -1,7 +1,11 @@
+// app/(drills)/_layout.tsx
 import React, { createContext, useContext, useMemo, useState } from 'react';
 import { Pressable } from 'react-native';
 import { Stack, useRouter } from 'expo-router';
+import { StatusBar } from 'expo-status-bar';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
+import { SlidersHorizontalIcon } from 'lucide-react-native';
+
 import { useTheme } from '../../../contexts/theme';
 import { makeStyles } from '../../../styles/makeStyles';
 
@@ -10,7 +14,6 @@ type DrillsUIContextType = {
   setSearchVisible: (v: boolean) => void;
   searchText: string;
   setSearchText: (t: string) => void;
-
   filterCategories: string[];
   setFilterCategories: (cats: string[]) => void;
   filterPlayers: number | '';
@@ -30,10 +33,10 @@ export const useDrillsUI = () => {
 
 export default function DrillsLayout() {
   const { theme } = useTheme();
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const styles = makeStyles(theme);
   const router = useRouter();
 
+  // local UI state
   const [searchVisible, _setSearchVisible] = useState(false);
   const [searchText, _setSearchText] = useState('');
   const [filterCategories, _setFilterCategories] = useState<string[]>([]);
@@ -44,30 +47,46 @@ export default function DrillsLayout() {
     _setSearchVisible(v);
     if (v) _setSearchText('');
   };
-  const setSearchText = (t: string) => _setSearchText(t);
-  const setFilterCategories = (cats: string[]) => _setFilterCategories(cats);
-  const setFilterPlayers = (n: number | '') => _setFilterPlayers(n);
-  const setFilterType = (t: string) => _setFilterType(t);
 
   const value = useMemo<DrillsUIContextType>(
     () => ({
       searchVisible,
       setSearchVisible,
       searchText,
-      setSearchText,
+      setSearchText: _setSearchText,
       filterCategories,
-      setFilterCategories,
+      setFilterCategories: _setFilterCategories,
       filterPlayers,
-      setFilterPlayers,
+      setFilterPlayers: _setFilterPlayers,
       filterType,
-      setFilterType,
+      setFilterType: _setFilterType,
     }),
     [searchVisible, searchText, filterCategories, filterPlayers, filterType]
   );
 
+  // --- Minimal theme → header mapping (uses your existing colors) ---
+  const headerBg = theme.colors.backgroundAccent; // light: #fff, dark: #000
+  const headerTitle = theme.colors.text; // light: #000, dark: #fff
+
+  // high-contrast tint in dark; your brand tint in light
+  const headerTint = theme.colors.text === '#ffffff' ? '#FFD54F' : '#62241c';
+
   return (
     <DrillsUIContext.Provider value={value}>
-      <Stack>
+      <Stack
+        screenOptions={{
+          // Let the header/colors follow your theme automatically on re-render
+          headerStyle: { backgroundColor: headerBg },
+          headerTitleStyle: { color: headerTitle },
+          headerTintColor: headerTint, // back button + header icons
+          headerShadowVisible: false,
+
+          // Screen background from your theme
+          contentStyle: { backgroundColor: theme.colors.background },
+
+          // Keep Android status bar visually aligned with the header
+        }}
+      >
         <Stack.Screen
           name="index"
           options={{
@@ -82,7 +101,7 @@ export default function DrillsLayout() {
                 <MaterialCommunityIcons
                   name={value.searchVisible ? 'close' : 'magnify'}
                   size={24}
-                  color={tintColor ?? 'black'}
+                  color={tintColor ?? headerTint}
                 />
               </Pressable>
             ),
@@ -93,10 +112,9 @@ export default function DrillsLayout() {
                 hitSlop={{ top: 8, bottom: 8, left: 8, right: 8 }}
                 style={{ paddingHorizontal: 8 }}
               >
-                <MaterialCommunityIcons
-                  name="filter"
+                <SlidersHorizontalIcon
                   size={24}
-                  color={tintColor ?? 'black'}
+                  color={tintColor ?? headerTint}
                 />
               </Pressable>
             ),
@@ -105,18 +123,12 @@ export default function DrillsLayout() {
 
         <Stack.Screen
           name="filters"
-          options={{
-            title: 'Filters',
-            presentation: 'modal',
-          }}
+          options={{ title: 'Filters', presentation: 'modal' }}
         />
 
         <Stack.Screen
           name="[drillId]"
-          options={{
-            title: 'Drill Details',
-            headerBackVisible: false,
-          }}
+          options={{ title: 'Drill Details', headerBackVisible: false }}
         />
       </Stack>
     </DrillsUIContext.Provider>
