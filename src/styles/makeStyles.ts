@@ -16,6 +16,10 @@ export const makeStyles = (theme: Theme) =>
       aspectRatio: 0.5625,
     },
     content: {
+      position: 'absolute',
+      bottom: 0,
+      left: 0,
+      backgroundColor: theme.colors.drillCard.background,
       padding: 8,
       width: '100%',
       flex: 1,

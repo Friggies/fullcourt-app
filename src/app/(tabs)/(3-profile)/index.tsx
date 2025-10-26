@@ -18,7 +18,7 @@ export default function Profile() {
         await signUp(email, password);
         Alert.alert(
           'Sign Up Successful',
-          'Check your email to confirm your account if confirmation is required.'
+          'Check your email to confirm your account.'
         );
       }
     } catch (error: any) {

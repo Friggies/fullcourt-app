@@ -1,5 +1,3 @@
-// Card.tsx
-import React from 'react';
 import { Image, View, Pressable } from 'react-native';
 import { useTheme } from '../../../contexts/theme';
 import { makeStyles } from '../../../styles/makeStyles';
@@ -34,7 +32,9 @@ export default function Card({ drill }: CardProps) {
         <View style={styles.content}>
           <Text>{drill.name}</Text>
           <View style={styles.info}>
-            <Text variant="label">{drill.category}</Text>
+            <Text variant="label">
+              {`${drill.players} ${drill.players === 1 ? 'player' : 'players'}`}
+            </Text>
           </View>
         </View>
       </Pressable>

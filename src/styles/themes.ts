@@ -9,6 +9,9 @@ export type Theme = {
     backgroundAccent: string;
     text: string;
     faded: string;
+    drillCard: {
+      background: string;
+    };
   };
   text: Record<string, TextStyle>;
 };
@@ -27,6 +30,9 @@ export const lightTheme: Theme = {
     backgroundAccent: '#ffffff',
     text: '#000000',
     faded: '#eeeeee',
+    drillCard: {
+      background: 'rgba(255,255,255,0.8)',
+    },
   },
   text: {
     ...baseTextStyles,
@@ -39,6 +45,9 @@ export const darkTheme: Theme = {
     backgroundAccent: '#000000',
     text: '#ffffff',
     faded: '#514f4f',
+    drillCard: {
+      background: 'rgba(0,0,0,0.8)',
+    },
   },
   text: {
     ...baseTextStyles,

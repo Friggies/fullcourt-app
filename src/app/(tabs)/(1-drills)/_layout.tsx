@@ -1,26 +1,11 @@
-// app/(drills)/_layout.tsx
-import React, { createContext, useContext, useMemo, useState } from 'react';
+import { createContext, useContext, useMemo, useState } from 'react';
 import { Pressable } from 'react-native';
 import { Stack, useRouter } from 'expo-router';
-import { StatusBar } from 'expo-status-bar';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import { SlidersHorizontalIcon } from 'lucide-react-native';
 
 import { useTheme } from '../../../contexts/theme';
-import { makeStyles } from '../../../styles/makeStyles';
-
-type DrillsUIContextType = {
-  searchVisible: boolean;
-  setSearchVisible: (v: boolean) => void;
-  searchText: string;
-  setSearchText: (t: string) => void;
-  filterCategories: string[];
-  setFilterCategories: (cats: string[]) => void;
-  filterPlayers: number | '';
-  setFilterPlayers: (n: number | '') => void;
-  filterType: string;
-  setFilterType: (t: string) => void;
-};
+import { DrillsUIContextType } from '../../../types/DrillsUIContextType';
 
 const DrillsUIContext = createContext<DrillsUIContextType | undefined>(
   undefined
@@ -33,10 +18,8 @@ export const useDrillsUI = () => {
 
 export default function DrillsLayout() {
   const { theme } = useTheme();
-  const styles = makeStyles(theme);
   const router = useRouter();
 
-  // local UI state
   const [searchVisible, _setSearchVisible] = useState(false);
   const [searchText, _setSearchText] = useState('');
   const [filterCategories, _setFilterCategories] = useState<string[]>([]);
@@ -64,27 +47,19 @@ export default function DrillsLayout() {
     [searchVisible, searchText, filterCategories, filterPlayers, filterType]
   );
 
-  // --- Minimal theme → header mapping (uses your existing colors) ---
-  const headerBg = theme.colors.backgroundAccent; // light: #fff, dark: #000
-  const headerTitle = theme.colors.text; // light: #000, dark: #fff
-
-  // high-contrast tint in dark; your brand tint in light
-  const headerTint = theme.colors.text === '#ffffff' ? '#FFD54F' : '#62241c';
+  const headerBg = theme.colors.backgroundAccent;
+  const headerTitle = theme.colors.text;
+  const headerTint = theme.colors.text === '#ffffff' ? '#F2791C' : '#62241c';
 
   return (
     <DrillsUIContext.Provider value={value}>
       <Stack
         screenOptions={{
-          // Let the header/colors follow your theme automatically on re-render
           headerStyle: { backgroundColor: headerBg },
           headerTitleStyle: { color: headerTitle },
-          headerTintColor: headerTint, // back button + header icons
+          headerTintColor: headerTint,
           headerShadowVisible: false,
-
-          // Screen background from your theme
           contentStyle: { backgroundColor: theme.colors.background },
-
-          // Keep Android status bar visually aligned with the header
         }}
       >
         <Stack.Screen
@@ -126,10 +101,7 @@ export default function DrillsLayout() {
           options={{ title: 'Filters', presentation: 'modal' }}
         />
 
-        <Stack.Screen
-          name="[drillId]"
-          options={{ title: 'Drill Details', headerBackVisible: false }}
-        />
+        <Stack.Screen name="[drillId]" options={{ title: 'Drill Details' }} />
       </Stack>
     </DrillsUIContext.Provider>
   );
