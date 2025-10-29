@@ -4,6 +4,7 @@ import { makeStyles } from '../../../styles/makeStyles';
 import { Text } from '../../common/Text';
 import { Drill } from '../../../types/Drill';
 import { Link } from 'expo-router';
+import { UsersIcon } from 'lucide-react-native';
 
 type CardProps = {
   drill: Drill;
@@ -29,12 +30,16 @@ export default function Card({ drill }: CardProps) {
             uri: 'https://fullcourt-training.com/thumbnails/3.webp',
           }}
         />
+        <View style={styles.cardPlayers}>
+          <UsersIcon color={theme.colors.text} size={12} />
+          <Text variant="label">
+            {drill.players === 1 ? '1 player' : `${drill.players} players`}
+          </Text>
+        </View>
         <View style={styles.content}>
           <Text>{drill.name}</Text>
           <View style={styles.info}>
-            <Text variant="label">
-              {`${drill.players} ${drill.players === 1 ? 'player' : 'players'}`}
-            </Text>
+            <Text variant="label">{`${drill.categories}`}</Text>
           </View>
         </View>
       </Pressable>

@@ -5,6 +5,9 @@ import { useTheme } from '../../../contexts/theme';
 
 export default function StackLayout() {
   const { mode, toggleTheme, theme } = useTheme();
+  const headerBg = theme.colors.backgroundAccent;
+  const headerTitle = theme.colors.text;
+  const headerTint = theme.colors.text === '#ffffff' ? '#F2791C' : '#62241c';
 
   function ThemeHeaderToggle() {
     const Icon =
@@ -13,19 +16,15 @@ export default function StackLayout() {
     return (
       <Pressable
         onPress={() => toggleTheme()}
-        hitSlop={10}
-        style={{ paddingHorizontal: 12 }}
+        hitSlop={8}
+        style={{ paddingHorizontal: 8 }}
         accessibilityRole="button"
         accessibilityLabel={`Toggle theme (current: ${mode})`}
       >
-        <Icon size={22} color={theme.colors.text} />
+        <Icon color={headerTint} />
       </Pressable>
     );
   }
-
-  const headerBg = theme.colors.backgroundAccent;
-  const headerTitle = theme.colors.text;
-  const headerTint = theme.colors.text === '#ffffff' ? '#F2791C' : '#62241c';
 
   return (
     <Stack

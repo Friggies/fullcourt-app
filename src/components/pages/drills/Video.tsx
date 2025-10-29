@@ -58,6 +58,7 @@ export default function Video({ link, id }: { link: string; id: number }) {
 
   const isPremium = videoUri.includes('supabase');
   console.log(videoUri, isPremium);
+  console.log(link);
 
   if (!isPremium) {
     return (
@@ -68,8 +69,14 @@ export default function Video({ link, id }: { link: string; id: number }) {
           scrollEnabled={false}
           nestedScrollEnabled={false}
           source={{
-            uri: `https://www.youtube.com/embed/${link}?rel=0&modestbranding=1&mute=1`,
+            uri: `https://www.youtube-nocookie.com/embed/${link}?playsinline=1&mute=1&widget_referrer=${encodeURIComponent('https://fullcourt-training.com')}`,
+            headers: {
+              Referer: 'https://fullcourt-training.com',
+            },
           }}
+          allowsInlineMediaPlayback
+          mediaPlaybackRequiresUserAction={false}
+          allowsFullscreenVideo
         />
       </View>
     );

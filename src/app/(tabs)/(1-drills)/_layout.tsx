@@ -1,8 +1,7 @@
 import { createContext, useContext, useMemo, useState } from 'react';
 import { Pressable } from 'react-native';
 import { Stack, useRouter } from 'expo-router';
-import { MaterialCommunityIcons } from '@expo/vector-icons';
-import { SlidersHorizontalIcon } from 'lucide-react-native';
+import { SearchIcon, SlidersHorizontalIcon, XIcon } from 'lucide-react-native';
 
 import { useTheme } from '../../../contexts/theme';
 import { DrillsUIContextType } from '../../../types/DrillsUIContextType';
@@ -70,21 +69,21 @@ export default function DrillsLayout() {
               <Pressable
                 accessibilityRole="button"
                 onPress={() => value.setSearchVisible(!value.searchVisible)}
-                hitSlop={{ top: 8, bottom: 8, left: 8, right: 8 }}
+                hitSlop={8}
                 style={{ paddingHorizontal: 8 }}
               >
-                <MaterialCommunityIcons
-                  name={value.searchVisible ? 'close' : 'magnify'}
-                  size={24}
-                  color={tintColor ?? headerTint}
-                />
+                {value.searchVisible ? (
+                  <XIcon color={tintColor ?? headerTint} />
+                ) : (
+                  <SearchIcon color={tintColor ?? headerTint} />
+                )}
               </Pressable>
             ),
             headerRight: ({ tintColor }) => (
               <Pressable
                 accessibilityRole="button"
                 onPress={() => router.push('/filters')}
-                hitSlop={{ top: 8, bottom: 8, left: 8, right: 8 }}
+                hitSlop={8}
                 style={{ paddingHorizontal: 8 }}
               >
                 <SlidersHorizontalIcon

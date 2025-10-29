@@ -1,7 +1,7 @@
-import MaterialCommunityIcons from '@expo/vector-icons/MaterialCommunityIcons';
 import { Tabs } from 'expo-router';
 import { StatusBar } from 'expo-status-bar';
 import { useTheme } from '../../contexts/theme';
+import { BookIcon, ClipboardPenLineIcon, UserIcon } from 'lucide-react-native';
 
 export default function TabLayout() {
   const { theme } = useTheme();
@@ -23,38 +23,28 @@ export default function TabLayout() {
             borderTopColor: theme.colors.faded,
           },
           tabBarActiveTintColor: activeTint,
-          tabBarInactiveTintColor: theme.colors.faded,
+          tabBarInactiveTintColor: '#808080',
         }}
       >
         <Tabs.Screen
           name="(1-drills)"
           options={{
             title: 'Playbook',
-            tabBarIcon: ({ color }) => (
-              <MaterialCommunityIcons
-                name="basketball"
-                size={26}
-                color={color}
-              />
-            ),
+            tabBarIcon: ({ color }) => <BookIcon color={color} />,
           }}
         />
         <Tabs.Screen
           name="(2-board)"
           options={{
             title: 'Tac Board',
-            tabBarIcon: ({ color }) => (
-              <MaterialCommunityIcons name="draw" size={26} color={color} />
-            ),
+            tabBarIcon: ({ color }) => <ClipboardPenLineIcon color={color} />,
           }}
         />
         <Tabs.Screen
           name="(3-profile)"
           options={{
             title: 'My Profile',
-            tabBarIcon: ({ color }) => (
-              <MaterialCommunityIcons name="account" size={26} color={color} />
-            ),
+            tabBarIcon: ({ color }) => <UserIcon color={color} />,
           }}
         />
       </Tabs>
