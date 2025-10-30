@@ -1,10 +1,4 @@
-import React, {
-  useCallback,
-  useEffect,
-  useMemo,
-  useRef,
-  useState,
-} from 'react';
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import {
   ActivityIndicator,
   FlatList,
@@ -20,28 +14,7 @@ import { useTheme } from '../../../contexts/theme';
 import { makeStyles } from '../../../styles/makeStyles';
 import { Text } from '../../../components/common/Text';
 import { useDrillsUI } from './_layout';
-
-type DrillRow = {
-  id: number;
-  name: string;
-  premium: boolean;
-  type: string;
-  description: string;
-  link: string;
-  players: number;
-  categories?: { name: string | null }[];
-};
-
-type DrillListItem = {
-  id: number;
-  name: string;
-  premium: boolean;
-  type: string;
-  description: string;
-  link: string;
-  players: number;
-  categories: string[];
-};
+import { Drill } from '../../../types/Drill';
 
 const TIMEOUT_MS = 12000;
 
@@ -79,7 +52,7 @@ export default function Drills() {
   const searchInputRef = useRef<TextInput>(null);
 
   const [loading, setLoading] = useState(false);
-  const [drills, setDrills] = useState<DrillListItem[]>([]);
+  const [drills, setDrills] = useState<Drill[]>([]);
   const [error, setError] = useState<unknown>(null);
   const [timedOut, setTimedOut] = useState(false);
   const [usedFallback, setUsedFallback] = useState(false);
@@ -92,22 +65,6 @@ export default function Drills() {
       console.log('[Drills] unmounted');
     };
   }, []);
-
-  const normalize = (data: DrillRow[]): DrillListItem[] =>
-    (data ?? []).map((d) => ({
-      id: d.id,
-      name: d.name,
-      type: d.type,
-      premium: d.premium,
-      description: d.description,
-      link: d.link,
-      players: d.players,
-      categories: Array.isArray(d.categories)
-        ? ([
-            ...new Set(d.categories.map((c) => c?.name).filter(Boolean)),
-          ] as string[])
-        : [],
-    }));
 
   const fetchDrills = useCallback(async () => {
     console.log('[Drills] fetch start');
@@ -211,7 +168,7 @@ export default function Drills() {
           rows: (data ?? []).length,
           firstId: data?.[0]?.id ?? null,
         });
-        setDrills(normalize((data as DrillRow[]) ?? []));
+        setDrills(data);
       }
     } catch (e) {
       if (!mounted.current) return;
@@ -251,15 +208,18 @@ export default function Drills() {
     });
 
     const out = drills.filter((d) => {
-      const matchesSearch = !search || d.name.toLowerCase().includes(search);
+      const matchesSearch =
+        !search || (d.name ?? '').toLowerCase().includes(search.toLowerCase());
       const matchesType = !filterType || d.type === filterType;
+      const filterSet = new Set(filterCategories);
       const matchesCategories =
-        filterCategories.length === 0 ||
-        filterCategories.some((cat) => d.categories.includes(cat));
+        filterSet.size === 0 ||
+        (d.categories ?? []).some((c) => filterSet.has(c.name));
       const matchesPlayers =
         filterPlayers === '' ||
         (typeof filterPlayers === 'number' &&
           (d.players ?? 0) <= filterPlayers);
+
       return (
         matchesSearch && matchesType && matchesCategories && matchesPlayers
       );

@@ -39,7 +39,9 @@ export default function Card({ drill }: CardProps) {
         <View style={styles.content}>
           <Text>{drill.name}</Text>
           <View style={styles.info}>
-            <Text variant="label">{`${drill.categories}`}</Text>
+            <Text variant="label">
+              {(drill.categories ?? []).map((c) => c.name).join(', ')}
+            </Text>
           </View>
         </View>
       </Pressable>

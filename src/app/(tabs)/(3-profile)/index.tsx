@@ -1,6 +1,7 @@
 import { useState } from 'react';
-import { View, Text, TextInput, Button, Alert } from 'react-native';
+import { View, TextInput, Button, Alert } from 'react-native';
 import { useSession } from '../../../contexts/auth';
+import { Text } from '../../../components/common/Text';
 
 export default function Profile() {
   const { session, signIn, signUp, signOut } = useSession();
@@ -31,10 +32,15 @@ export default function Profile() {
 
   if (session) {
     return (
-      <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
-        <Text style={{ fontSize: 20, marginBottom: 16 }}>
-          Welcome, {session.user.email}!
-        </Text>
+      <View
+        style={{
+          flex: 1,
+          gap: 6,
+          justifyContent: 'center',
+          alignItems: 'center',
+        }}
+      >
+        <Text>{session.user.email}!</Text>
         <Button title="Sign Out" onPress={signOut} />
       </View>
     );

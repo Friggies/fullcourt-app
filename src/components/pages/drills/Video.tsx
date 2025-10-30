@@ -99,8 +99,10 @@ export default function Video({ link, id }: { link: string; id: number }) {
 const styles = StyleSheet.create({
   container: {
     position: 'relative',
-    width,
+    width: width - 32,
     aspectRatio: 9 / 16,
+    borderRadius: 6,
+    overflow: 'hidden',
   },
   video: {
     width: '100%',

@@ -5,7 +5,7 @@ export interface Drill {
   description: string;
   link: string;
   type: 'Drill' | 'Play';
-  categories: Category[];
+  categories: { name: Category }[];
   players: number;
 }
 
