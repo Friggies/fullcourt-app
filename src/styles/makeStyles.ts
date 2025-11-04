@@ -50,23 +50,35 @@ export const makeStyles = (theme: Theme) =>
       borderRadius: 4,
       padding: 8,
     },
-    modalOverlay: {
-      flex: 1,
-      backgroundColor: 'rgba(0,0,0,0.5)',
-      justifyContent: 'center',
-    },
+    modalOverlay: {},
     modalContent: {
       margin: 20,
-      padding: 16,
-      backgroundColor: 'white',
-      borderRadius: 8,
+      padding: 8,
+      gap: 16,
     },
     modalButtons: {
-      flexDirection: 'row',
-      justifyContent: 'space-between',
+      flexDirection: 'column',
       marginTop: 16,
+      gap: 8,
     },
     flatlist: {
       padding: 8,
+    },
+    button: {
+      backgroundColor: '#F2791C',
+      padding: 12,
+      borderRadius: 6,
+      flex: 1,
+      justifyContent: 'center',
+      alignItems: 'center',
+      borderWidth: 1,
+      borderColor: '#F2791C',
+    },
+    buttonOutline: {
+      backgroundColor: theme.colors.backgroundAccent,
+      color: theme.colors.text,
+    },
+    buttonText: {
+      color: 'black',
     },
   });

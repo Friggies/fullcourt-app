@@ -6,7 +6,6 @@ import { BookIcon, ClipboardPenLineIcon, UserIcon } from 'lucide-react-native';
 export default function TabLayout() {
   const { theme } = useTheme();
   const isDark = theme.colors.text === '#ffffff';
-  const activeTint = isDark ? '#F2791C' : '#62241c';
 
   return (
     <>
@@ -22,7 +21,7 @@ export default function TabLayout() {
             backgroundColor: theme.colors.backgroundAccent,
             borderTopColor: theme.colors.faded,
           },
-          tabBarActiveTintColor: activeTint,
+          tabBarActiveTintColor: '#F2791C',
           tabBarInactiveTintColor: '#808080',
         }}
       >

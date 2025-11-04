@@ -8,8 +8,6 @@ import { useTheme } from '../../../contexts/theme';
 
 export default function Board() {
   const { theme } = useTheme();
-  const headerTint = theme.colors.text === '#ffffff' ? '#F2791C' : '#62241c';
-
   const canvasRef = useRef<CanvasHandle>(null);
   const [zoomed, setZoomed] = useState(false);
 
@@ -28,7 +26,7 @@ export default function Board() {
               hitSlop={8}
               style={{ paddingHorizontal: 8 }}
             >
-              <TrashIcon color={headerTint} />
+              <TrashIcon color={theme.colors.text} />
             </Pressable>
           ),
           headerRight: () => (
@@ -39,9 +37,9 @@ export default function Board() {
               style={{ paddingHorizontal: 8 }}
             >
               {zoomed ? (
-                <ZoomOutIcon color={headerTint} />
+                <ZoomOutIcon color={theme.colors.text} />
               ) : (
-                <ZoomInIcon color={headerTint} />
+                <ZoomInIcon color={theme.colors.text} />
               )}
             </Pressable>
           ),

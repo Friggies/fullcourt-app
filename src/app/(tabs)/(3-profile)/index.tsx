@@ -1,9 +1,12 @@
 import { useState } from 'react';
-import { View, TextInput, Button, Alert } from 'react-native';
+import { View, TextInput, Alert } from 'react-native';
 import { useSession } from '../../../contexts/auth';
 import { Text } from '../../../components/common/Text';
+import { Button } from '../../../components/common/Button';
+import { useTheme } from '../../../contexts/theme';
 
 export default function Profile() {
+  const { theme } = useTheme();
   const { session, signIn, signUp, signOut } = useSession();
   const [mode, setMode] = useState<'signIn' | 'signUp'>('signUp');
   const [email, setEmail] = useState('');
@@ -41,7 +44,7 @@ export default function Profile() {
         }}
       >
         <Text>{session.user.email}!</Text>
-        <Button title="Sign Out" onPress={signOut} />
+        <Button text="Sign Out" onPress={signOut} />
       </View>
     );
   }
@@ -53,13 +56,12 @@ export default function Profile() {
         justifyContent: 'center',
         alignItems: 'center',
         padding: 16,
+        gap: 16,
       }}
     >
-      <Text style={{ fontSize: 24, marginBottom: 16 }}>
-        {mode === 'signIn' ? 'Sign In' : 'Sign Up'}
-      </Text>
+      <Text variant="hero">{mode === 'signIn' ? 'Sign In' : 'Sign Up'}</Text>
 
-      <Text style={{ alignSelf: 'flex-start', marginLeft: '10%' }}>Email</Text>
+      <Text style={{ alignSelf: 'flex-start' }}>Email</Text>
       <TextInput
         value={email}
         onChangeText={setEmail}
@@ -67,16 +69,16 @@ export default function Profile() {
         keyboardType="email-address"
         style={{
           borderWidth: 1,
-          width: '80%',
+          width: '100%',
           marginBottom: 12,
           padding: 8,
           borderRadius: 4,
+          borderColor: '#808080',
+          color: theme.colors.text,
         }}
       />
 
-      <Text style={{ alignSelf: 'flex-start', marginLeft: '10%' }}>
-        Password
-      </Text>
+      <Text style={{ alignSelf: 'flex-start' }}>Password</Text>
       <TextInput
         value={password}
         onChangeText={setPassword}
@@ -84,30 +86,29 @@ export default function Profile() {
         autoCapitalize="none"
         style={{
           borderWidth: 1,
-          width: '80%',
+          width: '100%',
           marginBottom: 16,
           padding: 8,
           borderRadius: 4,
+          borderColor: '#808080',
+          color: theme.colors.text,
         }}
       />
 
       <Button
-        title={
+        text={
           loading ? 'Loading...' : mode === 'signIn' ? 'Sign In' : 'Sign Up'
         }
         onPress={handleSubmit}
         disabled={loading}
       />
-
-      <View style={{ marginTop: 12 }}>
-        <Button
-          title={mode === 'signIn' ? 'Switch to Sign Up' : 'Switch to Sign In'}
-          onPress={() =>
-            setMode((prev) => (prev === 'signIn' ? 'signUp' : 'signIn'))
-          }
-          color="gray"
-        />
-      </View>
+      <Button
+        variant="outline"
+        text={mode === 'signIn' ? 'Switch to Sign Up' : 'Switch to Sign In'}
+        onPress={() =>
+          setMode((prev) => (prev === 'signIn' ? 'signUp' : 'signIn'))
+        }
+      />
     </View>
   );
 }

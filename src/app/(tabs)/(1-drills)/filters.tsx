@@ -1,11 +1,18 @@
-import React, { useEffect, useMemo, useState } from 'react';
-import { View, Button, Pressable, TextInput, ScrollView } from 'react-native';
+import { useEffect, useMemo, useState } from 'react';
+import {
+  View,
+  Pressable,
+  TextInput,
+  ScrollView,
+  Text as TextRN,
+} from 'react-native';
 import { Stack, useRouter } from 'expo-router';
 import { useTheme } from '../../../contexts/theme';
 import { makeStyles } from '../../../styles/makeStyles';
 import { useDrillsUI } from './_layout';
 import { supabase } from '../../../lib/supabase';
 import { Text } from '../../../components/common/Text';
+import { Button } from '../../../components/common/Button';
 
 const describeError = (err: any) => {
   if (!err) return { info: 'no error object' };
@@ -36,11 +43,6 @@ export default function FiltersScreen() {
   const [loadingCats, setLoadingCats] = useState(false);
   const [categoryOptions, setCategoryOptions] = useState<string[]>([]);
   const [error, setError] = useState<unknown>(null);
-
-  useEffect(() => {
-    console.log('[Filters] mounted');
-    return () => console.log('[Filters] unmounted');
-  }, []);
 
   useEffect(() => {
     let cancelled = false;
@@ -128,13 +130,8 @@ export default function FiltersScreen() {
   return (
     <>
       <Stack.Screen options={{ title: 'Filters' }} />
-      <ScrollView
-        contentContainerStyle={[
-          styles.modalOverlay,
-          { justifyContent: 'center' },
-        ]}
-      >
-        <View style={[styles.modalContent, { gap: 16 }]}>
+      <ScrollView contentContainerStyle={styles.modalOverlay}>
+        <View style={styles.modalContent}>
           {/* Type */}
           <View style={{ gap: 8 }}>
             <Text variant="label">Type</Text>
@@ -149,7 +146,8 @@ export default function FiltersScreen() {
                   paddingHorizontal: 12,
                   borderRadius: 999,
                   borderWidth: 1,
-                  opacity: filterType === '' ? 1 : 0.7,
+                  borderColor: filterType === '' ? '#F2791C' : '#808080',
+                  backgroundColor: theme.colors.backgroundAccent,
                 }}
               >
                 <Text>All</Text>
@@ -166,8 +164,8 @@ export default function FiltersScreen() {
                     paddingHorizontal: 12,
                     borderRadius: 999,
                     borderWidth: 1,
-                    backgroundColor:
-                      filterType === t ? '#00000010' : 'transparent',
+                    borderColor: filterType === t ? '#F2791C' : '#808080',
+                    backgroundColor: theme.colors.backgroundAccent,
                   }}
                 >
                   <Text>{t}</Text>
@@ -178,7 +176,7 @@ export default function FiltersScreen() {
 
           {/* Players (max) */}
           <View style={{ gap: 8 }}>
-            <Text variant="label">Players (max)</Text>
+            <Text variant="label">Max Players</Text>
             <TextInput
               placeholder="Any"
               keyboardType="number-pad"
@@ -198,6 +196,9 @@ export default function FiltersScreen() {
                 borderRadius: 8,
                 paddingHorizontal: 12,
                 paddingVertical: 10,
+                borderColor: '#808080',
+                backgroundColor: theme.colors.backgroundAccent,
+                color: theme.colors.text,
               }}
             />
           </View>
@@ -224,7 +225,8 @@ export default function FiltersScreen() {
                         paddingHorizontal: 12,
                         borderRadius: 999,
                         borderWidth: 1,
-                        backgroundColor: selected ? '#00000010' : 'transparent',
+                        borderColor: selected ? '#F2791C' : '#808080',
+                        backgroundColor: theme.colors.backgroundAccent,
                       }}
                     >
                       <Text>{cat}</Text>
@@ -240,8 +242,15 @@ export default function FiltersScreen() {
 
           {/* Actions */}
           <View style={styles.modalButtons}>
-            <Button title="Clear" onPress={clearFilters} />
-            <Button title="Apply" onPress={applyAndClose} />
+            <Button
+              variant="outline"
+              text="Reset filters"
+              onPress={clearFilters}
+            />
+            <Button
+              text={`Show ${filterType === '' ? 'drills and plays' : filterType === 'Drill' ? 'drills' : 'plays'}`}
+              onPress={applyAndClose}
+            />
           </View>
         </View>
       </ScrollView>

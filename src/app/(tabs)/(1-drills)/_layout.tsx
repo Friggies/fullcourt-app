@@ -46,17 +46,13 @@ export default function DrillsLayout() {
     [searchVisible, searchText, filterCategories, filterPlayers, filterType]
   );
 
-  const headerBg = theme.colors.backgroundAccent;
-  const headerTitle = theme.colors.text;
-  const headerTint = theme.colors.text === '#ffffff' ? '#F2791C' : '#62241c';
-
   return (
     <DrillsUIContext.Provider value={value}>
       <Stack
         screenOptions={{
-          headerStyle: { backgroundColor: headerBg },
-          headerTitleStyle: { color: headerTitle },
-          headerTintColor: headerTint,
+          headerStyle: { backgroundColor: theme.colors.backgroundAccent },
+          headerTitleStyle: { color: theme.colors.text },
+          headerTintColor: theme.colors.text,
           headerShadowVisible: false,
           contentStyle: { backgroundColor: theme.colors.background },
         }}
@@ -64,7 +60,7 @@ export default function DrillsLayout() {
         <Stack.Screen
           name="index"
           options={{
-            title: 'All Drills',
+            title: 'All Drills & Plays',
             headerLeft: ({ tintColor }) => (
               <Pressable
                 accessibilityRole="button"
@@ -73,9 +69,9 @@ export default function DrillsLayout() {
                 style={{ paddingHorizontal: 8 }}
               >
                 {value.searchVisible ? (
-                  <XIcon color={tintColor ?? headerTint} />
+                  <XIcon color={tintColor} />
                 ) : (
-                  <SearchIcon color={tintColor ?? headerTint} />
+                  <SearchIcon color={tintColor} />
                 )}
               </Pressable>
             ),
@@ -86,10 +82,7 @@ export default function DrillsLayout() {
                 hitSlop={8}
                 style={{ paddingHorizontal: 8 }}
               >
-                <SlidersHorizontalIcon
-                  size={24}
-                  color={tintColor ?? headerTint}
-                />
+                <SlidersHorizontalIcon size={24} color={tintColor} />
               </Pressable>
             ),
           }}

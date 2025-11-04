@@ -5,9 +5,6 @@ import { useTheme } from '../../../contexts/theme';
 
 export default function StackLayout() {
   const { mode, toggleTheme, theme } = useTheme();
-  const headerBg = theme.colors.backgroundAccent;
-  const headerTitle = theme.colors.text;
-  const headerTint = theme.colors.text === '#ffffff' ? '#F2791C' : '#62241c';
 
   function ThemeHeaderToggle() {
     const Icon =
@@ -21,7 +18,7 @@ export default function StackLayout() {
         accessibilityRole="button"
         accessibilityLabel={`Toggle theme (current: ${mode})`}
       >
-        <Icon color={headerTint} />
+        <Icon color={theme.colors.text} />
       </Pressable>
     );
   }
@@ -29,9 +26,8 @@ export default function StackLayout() {
   return (
     <Stack
       screenOptions={{
-        headerStyle: { backgroundColor: headerBg },
-        headerTitleStyle: { color: headerTitle },
-        headerTintColor: headerTint, // back button + header icons
+        headerStyle: { backgroundColor: theme.colors.backgroundAccent },
+        headerTitleStyle: { color: theme.colors.text },
         headerShadowVisible: false,
         contentStyle: { backgroundColor: theme.colors.background },
       }}
@@ -43,7 +39,6 @@ export default function StackLayout() {
           headerRight: () => <ThemeHeaderToggle />,
         }}
       />
-      <Stack.Screen name="settings" options={{ title: 'Settings' }} />
     </Stack>
   );
 }
