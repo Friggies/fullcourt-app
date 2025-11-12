@@ -93,11 +93,12 @@ export default function Drills() {
           description,
           link,
           players,
-          categories ( name )
+          categories ( name ),
+          profiles_drills ( profile_id )
         `
         )
         .order('id', { ascending: true });
-
+      console.log('Drills fetched query:', q);
       const { data, error, status, statusText } = await attachAbort(
         q,
         ac.signal

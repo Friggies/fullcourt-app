@@ -12,7 +12,7 @@ import { Text } from '../../../components/common/Text';
 import Markdown from 'react-native-markdown-display';
 import Video from '../../../components/pages/drills/Video';
 import { Drill } from '../../../types/Drill';
-import { BookmarkIcon, SaveIcon } from 'lucide-react-native';
+import { BookmarkCheck, BookmarkIcon } from 'lucide-react-native';
 
 export default function DrillDetail() {
   const { drillId } = useLocalSearchParams<{ drillId?: string | string[] }>();
@@ -39,7 +39,8 @@ export default function DrillDetail() {
           description,
           link,
           players,
-          categories ( name )
+          categories ( name ),
+          profiles_drills ( profile_id )
         `
         )
         .eq('id', id)
@@ -48,6 +49,7 @@ export default function DrillDetail() {
       if (error) {
         setDrill(null);
       } else {
+        console.log('Fetched drill:', data);
         setDrill(data as Drill);
       }
     } catch (e) {
@@ -56,6 +58,49 @@ export default function DrillDetail() {
       setLoading(false);
     }
   }, [id]);
+
+  const toggleBookmark = async () => {
+    if (!drill) return;
+
+    const session = await supabase.auth.getSession();
+    const profileId = session.data.session?.user.id;
+    if (!profileId) return;
+
+    console.log('profileId:', profileId);
+    console.log('drill id:', drill.id);
+
+    const isBookmarked = drill.profiles_drills.length > 0;
+    console.log('isBookmarked:', isBookmarked);
+
+    if (isBookmarked) {
+      // Remove bookmark
+      await supabase
+        .from('profiles_drills')
+        .delete()
+        .eq('drill_id', drill.id)
+        .eq('profile_id', profileId);
+
+      setDrill({
+        ...drill,
+        profiles_drills: [], // remove locally
+      });
+    } else {
+      // ✅ Add bookmark
+      const { data } = await supabase
+        .from('profiles_drills')
+        .insert({
+          drill_id: drill.id,
+          profile_id: profileId,
+        })
+        .select();
+      console.log('added bookmark data:', data);
+
+      setDrill({
+        ...drill,
+        profiles_drills: data ?? [],
+      });
+    }
+  };
 
   useEffect(() => {
     fetchDrill();
@@ -108,8 +153,12 @@ export default function DrillDetail() {
                   ))}
                 </View>
               </View>
-              <TouchableOpacity>
-                <BookmarkIcon />
+              <TouchableOpacity onPress={toggleBookmark}>
+                {drill.profiles_drills.length > 0 ? (
+                  <BookmarkCheck />
+                ) : (
+                  <BookmarkIcon />
+                )}
               </TouchableOpacity>
             </View>
             <Markdown
