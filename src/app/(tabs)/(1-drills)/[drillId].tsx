@@ -113,9 +113,9 @@ export default function DrillDetail() {
               </View>
               <TouchableOpacity onPress={() => toggleBookmark(drill, setDrill)}>
                 {drill.profiles_drills.length > 0 ? (
-                  <BookmarkCheck />
+                  <BookmarkCheck color={theme.colors.text} />
                 ) : (
-                  <BookmarkIcon />
+                  <BookmarkIcon color={theme.colors.text} />
                 )}
               </TouchableOpacity>
             </View>
