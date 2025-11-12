@@ -5,6 +5,8 @@ import { SearchIcon, SlidersHorizontalIcon, XIcon } from 'lucide-react-native';
 
 import { useTheme } from '../../../contexts/theme';
 import { DrillsUIContextType } from '../../../types/DrillsUIContextType';
+import { Drill } from '../../../types/Drill';
+import { supabase } from '../../../lib/supabase';
 
 const DrillsUIContext = createContext<DrillsUIContextType | undefined>(
   undefined
@@ -24,6 +26,57 @@ export default function DrillsLayout() {
   const [filterCategories, _setFilterCategories] = useState<string[]>([]);
   const [filterPlayers, _setFilterPlayers] = useState<number | ''>('');
   const [filterType, _setFilterType] = useState<string>('');
+  const [drills, setDrills] = useState<Drill[]>([]);
+
+  const toggleBookmark = async (
+    drill: Drill,
+    localSetDrill?: React.Dispatch<React.SetStateAction<Drill | null>>
+  ) => {
+    const session = await supabase.auth.getSession();
+    const profileId = session.data.session?.user.id;
+    if (!profileId) return;
+
+    const isBookmarked = drill.profiles_drills.length > 0;
+
+    if (isBookmarked) {
+      // Remove bookmark
+      await supabase
+        .from('profiles_drills')
+        .delete()
+        .eq('drill_id', drill.id)
+        .eq('profile_id', profileId);
+
+      const updatedDrill = { ...drill, profiles_drills: [] };
+
+      // Update global state
+      setDrills((prev) =>
+        prev.map((d) => (d.id === drill.id ? updatedDrill : d))
+      );
+
+      // Update local state (details page)
+      if (localSetDrill) localSetDrill(updatedDrill);
+    } else {
+      // Add bookmark
+      const { data } = await supabase
+        .from('profiles_drills')
+        .insert({
+          drill_id: drill.id,
+          profile_id: profileId,
+        })
+        .select();
+
+      const updatedDrill = {
+        ...drill,
+        profiles_drills: data ?? [{ profile_id: profileId }],
+      };
+
+      setDrills((prev) =>
+        prev.map((d) => (d.id === drill.id ? updatedDrill : d))
+      );
+
+      if (localSetDrill) localSetDrill(updatedDrill);
+    }
+  };
 
   const setSearchVisible = (v: boolean) => {
     _setSearchVisible(v);
@@ -42,8 +95,18 @@ export default function DrillsLayout() {
       setFilterPlayers: _setFilterPlayers,
       filterType,
       setFilterType: _setFilterType,
+      drills,
+      setDrills,
+      toggleBookmark,
     }),
-    [searchVisible, searchText, filterCategories, filterPlayers, filterType]
+    [
+      searchVisible,
+      searchText,
+      filterCategories,
+      filterPlayers,
+      filterType,
+      drills,
+    ]
   );
 
   return (

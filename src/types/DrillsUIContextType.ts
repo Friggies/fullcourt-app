@@ -1,3 +1,5 @@
+import { Drill } from './Drill';
+
 export type DrillsUIContextType = {
   searchVisible: boolean;
   setSearchVisible: (v: boolean) => void;
@@ -9,4 +11,10 @@ export type DrillsUIContextType = {
   setFilterPlayers: (n: number | '') => void;
   filterType: string;
   setFilterType: (t: string) => void;
+  drills: Drill[];
+  setDrills: React.Dispatch<React.SetStateAction<Drill[]>>;
+  toggleBookmark: (
+    drill: Drill,
+    localSetDrill?: React.Dispatch<React.SetStateAction<Drill | null>>
+  ) => Promise<void>;
 };
