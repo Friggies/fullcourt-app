@@ -57,8 +57,8 @@ export default function Video({ link, id }: { link: string; id: number }) {
   }
 
   const isPremium = videoUri.includes('supabase');
-  console.log(videoUri, isPremium);
-  console.log(link);
+  console.log('[Video] Uri', videoUri, isPremium);
+  console.log('[Video] Link', link);
 
   if (!isPremium) {
     return (

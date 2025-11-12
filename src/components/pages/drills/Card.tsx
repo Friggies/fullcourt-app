@@ -13,7 +13,6 @@ type CardProps = {
 export default function Card({ drill }: CardProps) {
   const { theme } = useTheme();
   const styles = makeStyles(theme);
-  console.log('drill.profiles_drills', drill.profiles_drills);
   return (
     <Link
       style={styles.card}

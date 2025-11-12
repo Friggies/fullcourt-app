@@ -51,7 +51,6 @@ export default function DrillDetail() {
       if (error) {
         setDrill(null);
       } else {
-        console.log('Fetched drill:', data);
         setDrill(data as Drill);
       }
     } catch (e) {
