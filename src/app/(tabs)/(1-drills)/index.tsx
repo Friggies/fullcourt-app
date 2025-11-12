@@ -46,13 +46,14 @@ export default function Drills() {
     filterCategories,
     filterPlayers,
     filterType,
+    drills,
+    setDrills,
   } = useDrillsUI();
 
   const debouncedSearch = useDebounce(searchText, 300);
   const searchInputRef = useRef<TextInput>(null);
 
   const [loading, setLoading] = useState(false);
-  const [drills, setDrills] = useState<Drill[]>([]);
   const [error, setError] = useState<unknown>(null);
   const [timedOut, setTimedOut] = useState(false);
   const [usedFallback, setUsedFallback] = useState(false);
@@ -93,11 +94,12 @@ export default function Drills() {
           description,
           link,
           players,
-          categories ( name )
+          categories ( name ),
+          profiles_drills ( profile_id )
         `
         )
         .order('id', { ascending: true });
-
+      console.log('Drills fetched query:', q);
       const { data, error, status, statusText } = await attachAbort(
         q,
         ac.signal
@@ -186,7 +188,11 @@ export default function Drills() {
 
   useEffect(() => {
     console.log('[Drills] initial load');
-    fetchDrills();
+    if (drills.length === 0) {
+      fetchDrills();
+    } else {
+      console.log('[Drills] skipping fetch, drills already loaded');
+    }
   }, [fetchDrills]);
 
   useEffect(() => {

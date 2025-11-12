@@ -4,7 +4,7 @@ import { makeStyles } from '../../../styles/makeStyles';
 import { Text } from '../../common/Text';
 import { Drill } from '../../../types/Drill';
 import { Link } from 'expo-router';
-import { UsersIcon } from 'lucide-react-native';
+import { BookmarkCheckIcon, UsersIcon } from 'lucide-react-native';
 
 type CardProps = {
   drill: Drill;
@@ -13,7 +13,7 @@ type CardProps = {
 export default function Card({ drill }: CardProps) {
   const { theme } = useTheme();
   const styles = makeStyles(theme);
-
+  console.log('drill.profiles_drills', drill.profiles_drills);
   return (
     <Link
       style={styles.card}
@@ -30,6 +30,11 @@ export default function Card({ drill }: CardProps) {
             uri: 'https://fullcourt-training.com/thumbnails/3.webp',
           }}
         />
+        {drill.profiles_drills != null && drill.profiles_drills.length > 0 && (
+          <View style={styles.cardBookmarked}>
+            <BookmarkCheckIcon color={theme.colors.text} size={14} />
+          </View>
+        )}
         <View style={styles.cardPlayers}>
           <UsersIcon color={theme.colors.text} size={12} />
           <Text variant="label">

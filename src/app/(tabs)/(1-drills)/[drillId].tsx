@@ -12,7 +12,8 @@ import { Text } from '../../../components/common/Text';
 import Markdown from 'react-native-markdown-display';
 import Video from '../../../components/pages/drills/Video';
 import { Drill } from '../../../types/Drill';
-import { BookmarkIcon, SaveIcon } from 'lucide-react-native';
+import { BookmarkCheck, BookmarkIcon } from 'lucide-react-native';
+import { useDrillsUI } from './_layout';
 
 export default function DrillDetail() {
   const { drillId } = useLocalSearchParams<{ drillId?: string | string[] }>();
@@ -21,6 +22,7 @@ export default function DrillDetail() {
   const [drill, setDrill] = useState<Drill | null>(null);
   const [loading, setLoading] = useState(true);
   const { theme } = useTheme();
+  const { toggleBookmark } = useDrillsUI();
 
   const fetchDrill = useCallback(async () => {
     if (!id) {
@@ -39,7 +41,8 @@ export default function DrillDetail() {
           description,
           link,
           players,
-          categories ( name )
+          categories ( name ),
+          profiles_drills ( profile_id )
         `
         )
         .eq('id', id)
@@ -48,6 +51,7 @@ export default function DrillDetail() {
       if (error) {
         setDrill(null);
       } else {
+        console.log('Fetched drill:', data);
         setDrill(data as Drill);
       }
     } catch (e) {
@@ -108,8 +112,12 @@ export default function DrillDetail() {
                   ))}
                 </View>
               </View>
-              <TouchableOpacity>
-                <BookmarkIcon />
+              <TouchableOpacity onPress={() => toggleBookmark(drill, setDrill)}>
+                {drill.profiles_drills.length > 0 ? (
+                  <BookmarkCheck />
+                ) : (
+                  <BookmarkIcon />
+                )}
               </TouchableOpacity>
             </View>
             <Markdown

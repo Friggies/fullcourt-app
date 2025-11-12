@@ -7,6 +7,7 @@ export interface Drill {
   type: 'Drill' | 'Play';
   categories: { name: Category }[];
   players: number;
+  profiles_drills: { profile_id: string }[];
 }
 
 export const CATEGORIES = [
