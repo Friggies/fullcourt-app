@@ -12,7 +12,7 @@ import { Text } from '../../../components/common/Text';
 import Markdown from 'react-native-markdown-display';
 import Video from '../../../components/pages/drills/Video';
 import { Drill } from '../../../types/Drill';
-import { BookmarkCheck, BookmarkIcon } from 'lucide-react-native';
+import { Bookmark } from 'lucide-react-native';
 import { useDrillsUI } from './_layout';
 
 export default function DrillDetail() {
@@ -113,9 +113,13 @@ export default function DrillDetail() {
               </View>
               <TouchableOpacity onPress={() => toggleBookmark(drill, setDrill)}>
                 {drill.profiles_drills.length > 0 ? (
-                  <BookmarkCheck color={theme.colors.text} />
+                  <Bookmark
+                    fill={theme.colors.orange}
+                    color={theme.colors.text}
+                    size={30}
+                  />
                 ) : (
-                  <BookmarkIcon color={theme.colors.text} />
+                  <Bookmark color={theme.colors.text} size={30} />
                 )}
               </TouchableOpacity>
             </View>

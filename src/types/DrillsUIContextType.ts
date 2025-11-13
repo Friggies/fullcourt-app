@@ -11,6 +11,8 @@ export type DrillsUIContextType = {
   setFilterPlayers: (n: number | '') => void;
   filterType: string;
   setFilterType: (t: string) => void;
+  filterBookmarked: boolean;
+  setFilterBookmarked: (b: boolean) => void;
   drills: Drill[];
   setDrills: React.Dispatch<React.SetStateAction<Drill[]>>;
   toggleBookmark: (

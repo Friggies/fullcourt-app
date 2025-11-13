@@ -13,6 +13,7 @@ import { useDrillsUI } from './_layout';
 import { supabase } from '../../../lib/supabase';
 import { Text } from '../../../components/common/Text';
 import { Button } from '../../../components/common/Button';
+import { Bookmark } from 'lucide-react-native';
 
 const describeError = (err: any) => {
   if (!err) return { info: 'no error object' };
@@ -38,6 +39,8 @@ export default function FiltersScreen() {
     setFilterPlayers,
     filterType,
     setFilterType,
+    filterBookmarked,
+    setFilterBookmarked,
   } = useDrillsUI();
 
   const [loadingCats, setLoadingCats] = useState(false);
@@ -114,6 +117,7 @@ export default function FiltersScreen() {
     setFilterCategories([]);
     setFilterPlayers('');
     setFilterType('');
+    setFilterBookmarked(false);
   };
 
   const applyAndClose = () => {
@@ -121,6 +125,7 @@ export default function FiltersScreen() {
       filterType,
       filterPlayers,
       filterCategories,
+      filterBookmarked,
     });
     router.back();
   };
@@ -146,7 +151,10 @@ export default function FiltersScreen() {
                   paddingHorizontal: 12,
                   borderRadius: 999,
                   borderWidth: 1,
-                  borderColor: filterType === '' ? '#F2791C' : '#808080',
+                  borderColor:
+                    filterType === ''
+                      ? theme.colors.orange
+                      : theme.colors.inactive,
                   backgroundColor: theme.colors.backgroundAccent,
                 }}
               >
@@ -164,13 +172,48 @@ export default function FiltersScreen() {
                     paddingHorizontal: 12,
                     borderRadius: 999,
                     borderWidth: 1,
-                    borderColor: filterType === t ? '#F2791C' : '#808080',
+                    borderColor:
+                      filterType === t
+                        ? theme.colors.orange
+                        : theme.colors.inactive,
                     backgroundColor: theme.colors.backgroundAccent,
                   }}
                 >
                   <Text>{t}</Text>
                 </Pressable>
               ))}
+              {/* Bookmark */}
+              <Pressable
+                onPress={() => {
+                  console.log(
+                    '[Filters] old bookmarked filter -> ',
+                    filterBookmarked
+                  );
+                  setFilterBookmarked(!filterBookmarked);
+                  console.log('[Filters] set bookmarked -> ', filterBookmarked);
+                }}
+                style={{
+                  paddingVertical: 8,
+                  paddingHorizontal: 12,
+                  borderRadius: 999,
+                  borderWidth: 1,
+                  borderColor: filterBookmarked
+                    ? theme.colors.orange
+                    : theme.colors.inactive,
+                  backgroundColor: theme.colors.backgroundAccent,
+                }}
+              >
+                <View
+                  style={{ flexDirection: 'row', alignItems: 'center', gap: 4 }}
+                >
+                  <Bookmark
+                    fill={theme.colors.text}
+                    color={theme.colors.text}
+                    size={16}
+                  />
+                  <Text>Saved</Text>
+                </View>
+              </Pressable>
             </View>
           </View>
 
@@ -196,7 +239,7 @@ export default function FiltersScreen() {
                 borderRadius: 8,
                 paddingHorizontal: 12,
                 paddingVertical: 10,
-                borderColor: '#808080',
+                borderColor: theme.colors.inactive,
                 backgroundColor: theme.colors.backgroundAccent,
                 color: theme.colors.text,
               }}
@@ -225,7 +268,9 @@ export default function FiltersScreen() {
                         paddingHorizontal: 12,
                         borderRadius: 999,
                         borderWidth: 1,
-                        borderColor: selected ? '#F2791C' : '#808080',
+                        borderColor: selected
+                          ? theme.colors.orange
+                          : theme.colors.inactive,
                         backgroundColor: theme.colors.backgroundAccent,
                       }}
                     >

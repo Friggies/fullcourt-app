@@ -26,6 +26,8 @@ export default function DrillsLayout() {
   const [filterCategories, _setFilterCategories] = useState<string[]>([]);
   const [filterPlayers, _setFilterPlayers] = useState<number | ''>('');
   const [filterType, _setFilterType] = useState<string>('');
+  const [filterBookmarked, _setFilterBookmarked] = useState<boolean>(false);
+
   const [drills, setDrills] = useState<Drill[]>([]);
 
   const toggleBookmark = async (
@@ -95,6 +97,8 @@ export default function DrillsLayout() {
       setFilterPlayers: _setFilterPlayers,
       filterType,
       setFilterType: _setFilterType,
+      filterBookmarked,
+      setFilterBookmarked: _setFilterBookmarked,
       drills,
       setDrills,
       toggleBookmark,
@@ -105,6 +109,7 @@ export default function DrillsLayout() {
       filterCategories,
       filterPlayers,
       filterType,
+      filterBookmarked,
       drills,
     ]
   );

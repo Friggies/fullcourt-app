@@ -12,7 +12,7 @@ export const makeStyles = (theme: Theme) =>
     },
     cardPlayers: {
       position: 'absolute',
-      backgroundColor: theme.colors.backgroundAccent,
+      backgroundColor: theme.colors.drillCard.background,
       paddingHorizontal: 6,
       paddingVertical: 3,
       borderRadius: 2,
@@ -26,7 +26,7 @@ export const makeStyles = (theme: Theme) =>
     },
     cardBookmarked: {
       position: 'absolute',
-      backgroundColor: theme.colors.backgroundAccent,
+      backgroundColor: theme.colors.drillCard.background,
       paddingHorizontal: 6,
       paddingVertical: 5,
       borderRadius: 2,
@@ -79,14 +79,14 @@ export const makeStyles = (theme: Theme) =>
       padding: 8,
     },
     button: {
-      backgroundColor: '#F2791C',
+      backgroundColor: theme.colors.orange,
       padding: 12,
       borderRadius: 6,
       flex: 1,
       justifyContent: 'center',
       alignItems: 'center',
       borderWidth: 1,
-      borderColor: '#F2791C',
+      borderColor: theme.colors.orange,
     },
     buttonOutline: {
       backgroundColor: theme.colors.backgroundAccent,

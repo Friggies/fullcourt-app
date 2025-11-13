@@ -21,8 +21,8 @@ export default function TabLayout() {
             backgroundColor: theme.colors.backgroundAccent,
             borderTopColor: theme.colors.faded,
           },
-          tabBarActiveTintColor: '#F2791C',
-          tabBarInactiveTintColor: '#808080',
+          tabBarActiveTintColor: theme.colors.orange,
+          tabBarInactiveTintColor: theme.colors.inactive,
         }}
       >
         <Tabs.Screen

@@ -46,6 +46,7 @@ export default function Drills() {
     filterCategories,
     filterPlayers,
     filterType,
+    filterBookmarked,
     drills,
     setDrills,
   } = useDrillsUI();
@@ -210,6 +211,7 @@ export default function Drills() {
       filterType,
       filterCategories,
       filterPlayers,
+      filterBookmarked,
       total: drills.length,
     });
 
@@ -225,15 +227,28 @@ export default function Drills() {
         filterPlayers === '' ||
         (typeof filterPlayers === 'number' &&
           (d.players ?? 0) <= filterPlayers);
-
+      const matchesBookmarked =
+        !filterBookmarked ||
+        (d.profiles_drills != null && d.profiles_drills.length > 0);
       return (
-        matchesSearch && matchesType && matchesCategories && matchesPlayers
+        matchesSearch &&
+        matchesType &&
+        matchesCategories &&
+        matchesPlayers &&
+        matchesBookmarked
       );
     });
 
     console.log('[Drills] filtered results:', out.length);
     return out;
-  }, [drills, debouncedSearch, filterType, filterCategories, filterPlayers]);
+  }, [
+    drills,
+    debouncedSearch,
+    filterType,
+    filterCategories,
+    filterPlayers,
+    filterBookmarked,
+  ]);
 
   return (
     <>

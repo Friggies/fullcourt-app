@@ -4,7 +4,7 @@ import { makeStyles } from '../../../styles/makeStyles';
 import { Text } from '../../common/Text';
 import { Drill } from '../../../types/Drill';
 import { Link } from 'expo-router';
-import { BookmarkCheckIcon, UsersIcon } from 'lucide-react-native';
+import { Bookmark, UsersIcon } from 'lucide-react-native';
 
 type CardProps = {
   drill: Drill;
@@ -31,7 +31,11 @@ export default function Card({ drill }: CardProps) {
         />
         {drill.profiles_drills != null && drill.profiles_drills.length > 0 && (
           <View style={styles.cardBookmarked}>
-            <BookmarkCheckIcon color={theme.colors.text} size={14} />
+            <Bookmark
+              fill={theme.colors.orange} //{theme.colors.text}
+              color={theme.colors.text}
+              size={16}
+            />
           </View>
         )}
         <View style={styles.cardPlayers}>

@@ -16,12 +16,12 @@ export function Button({ onPress, text, variant = 'solid', disabled }: Props) {
       ? {
           bg: theme.colors.backgroundAccent,
           text: theme.colors.text,
-          border: '#F2791C',
+          border: theme.colors.inactive,
         }
       : {
-          bg: '#F2791C',
+          bg: theme.colors.orange,
           text: 'black',
-          border: '#F2791C',
+          border: theme.colors.inactive,
         };
 
   const inactive =

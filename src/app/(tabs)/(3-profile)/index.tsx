@@ -73,7 +73,7 @@ export default function Profile() {
           marginBottom: 12,
           padding: 8,
           borderRadius: 4,
-          borderColor: '#808080',
+          borderColor: theme.colors.inactive,
           color: theme.colors.text,
         }}
       />
@@ -90,7 +90,7 @@ export default function Profile() {
           marginBottom: 16,
           padding: 8,
           borderRadius: 4,
-          borderColor: '#808080',
+          borderColor: theme.colors.inactive,
           color: theme.colors.text,
         }}
       />

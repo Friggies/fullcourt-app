@@ -12,6 +12,8 @@ export type Theme = {
     drillCard: {
       background: string;
     };
+    orange: string;
+    inactive: string;
   };
   text: Record<string, TextStyle>;
 };
@@ -33,6 +35,8 @@ export const lightTheme: Theme = {
     drillCard: {
       background: 'rgba(255,255,255,0.8)',
     },
+    orange: '#F2791C',
+    inactive: '#808080',
   },
   text: {
     ...baseTextStyles,
@@ -48,6 +52,8 @@ export const darkTheme: Theme = {
     drillCard: {
       background: 'rgba(0,0,0,0.8)',
     },
+    orange: '#F2791C',
+    inactive: '#808080',
   },
   text: {
     ...baseTextStyles,
