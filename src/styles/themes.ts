@@ -33,7 +33,7 @@ export const lightTheme: Theme = {
     text: '#000000',
     faded: '#eeeeee',
     drillCard: {
-      background: 'rgba(255,255,255,0.8)',
+      background: 'rgba(255,255,255,0.9)',
     },
     orange: '#F2791C',
     inactive: '#808080',

@@ -32,7 +32,7 @@ export default function Card({ drill }: CardProps) {
         {drill.profiles_drills != null && drill.profiles_drills.length > 0 && (
           <View style={styles.cardBookmarked}>
             <Bookmark
-              fill={theme.colors.orange} //{theme.colors.text}
+              fill={theme.colors.text} //{theme.colors.text}
               color={theme.colors.text}
               size={16}
             />
