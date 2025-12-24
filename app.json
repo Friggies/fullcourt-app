@@ -29,7 +29,9 @@
       "favicon": "./assets/favicon.png"
     },
     "plugins": [
-      ["expo-router"],
+      [
+        "expo-router"
+      ],
       [
         "expo-video",
         {
@@ -41,6 +43,13 @@
     ],
     "experiments": {
       "typedRoutes": true
-    }
+    },
+    "extra": {
+      "router": {},
+      "eas": {
+        "projectId": "55bb7b54-8bee-4891-a0d8-56245b5a4864"
+      }
+    },
+    "owner": "fullcourt-training"
   }
 }
