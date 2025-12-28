@@ -58,32 +58,26 @@ export default function FiltersScreen() {
           .from('drills')
           .select('categories ( name )');
 
-        if (cancelled) {
-          console.log('[Filters] categories response ignored (unmounted)');
-          return;
-        }
+        // error handling
+
+        const set = new Set<string>();
+        (data ?? []).forEach((row: any) => {
+          (row?.categories ?? []).forEach((c: any) => {
+            if (c?.name) set.add(c.name as string);
+          });
+        });
+        const options = Array.from(set).sort((a, b) => a.localeCompare(b));
+        console.log('[Filters] categories ok', {
+          status,
+          statusText,
+          options: options.length,
+        });
+        setCategoryOptions(options);
 
         if (error) {
-          console.error('[Filters] categories error:', describeError(error), {
-            status,
-            statusText,
-          });
+          console.error('[Filters] categories error:', describeError(error));
           setError(error);
           setCategoryOptions([]);
-        } else {
-          const set = new Set<string>();
-          (data ?? []).forEach((row: any) => {
-            (row?.categories ?? []).forEach((c: any) => {
-              if (c?.name) set.add(c.name as string);
-            });
-          });
-          const options = Array.from(set).sort((a, b) => a.localeCompare(b));
-          console.log('[Filters] categories ok', {
-            status,
-            statusText,
-            options: options.length,
-          });
-          setCategoryOptions(options);
         }
       } catch (e) {
         if (!cancelled) {

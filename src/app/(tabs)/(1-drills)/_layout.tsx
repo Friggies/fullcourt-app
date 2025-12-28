@@ -1,5 +1,5 @@
 import { createContext, useContext, useMemo, useState } from 'react';
-import { Pressable } from 'react-native';
+import { Alert, Pressable } from 'react-native';
 import { Stack, useRouter } from 'expo-router';
 import { SearchIcon, SlidersHorizontalIcon, XIcon } from 'lucide-react-native';
 
@@ -7,6 +7,7 @@ import { useTheme } from '../../../contexts/theme';
 import { DrillsUIContextType } from '../../../types/DrillsUIContextType';
 import { Drill } from '../../../types/Drill';
 import { supabase } from '../../../lib/supabase';
+import { useSession } from '../../../contexts/auth';
 
 const DrillsUIContext = createContext<DrillsUIContextType | undefined>(
   undefined
@@ -20,6 +21,7 @@ export const useDrillsUI = () => {
 export default function DrillsLayout() {
   const { theme } = useTheme();
   const router = useRouter();
+  const { session } = useSession();
 
   const [searchVisible, _setSearchVisible] = useState(false);
   const [searchText, _setSearchText] = useState('');
@@ -34,10 +36,14 @@ export default function DrillsLayout() {
     drill: Drill,
     localSetDrill?: React.Dispatch<React.SetStateAction<Drill | null>>
   ) => {
-    const session = await supabase.auth.getSession();
-    const profileId = session.data.session?.user.id;
-    if (!profileId) return;
-
+    if (!session?.user?.id) {
+      Alert.alert(
+        'Bookmark unavailable',
+        'Please log in or sign up to bookmark drills.'
+      );
+      return;
+    }
+    const profileId = session.user.id;
     const isBookmarked = drill.profiles_drills.length > 0;
 
     if (isBookmarked) {

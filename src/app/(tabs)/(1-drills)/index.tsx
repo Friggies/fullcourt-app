@@ -87,17 +87,8 @@ export default function Drills() {
       let q = supabase
         .from('drills')
         .select(
-          `
-          id,
-          name,
-          type,
-          premium,
-          description,
-          link,
-          players,
-          categories ( name ),
-          profiles_drills ( profile_id )
-        `
+          `id, name, type, premium, description, link, players,
+                  categories ( name ), profiles_drills ( profile_id )`
         )
         .order('id', { ascending: true });
       console.log('Drills fetched query:', q);

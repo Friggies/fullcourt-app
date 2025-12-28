@@ -71,9 +71,7 @@ export function SessionProvider({ children }: PropsWithChildren) {
   };
 
   return (
-    <AuthContext.Provider
-      value={{ session, isLoading, signIn, signUp, signOut }}
-    >
+    <AuthContext.Provider value={{ session, isLoading, signIn, signUp, signOut }}>
       {children}
     </AuthContext.Provider>
   );
