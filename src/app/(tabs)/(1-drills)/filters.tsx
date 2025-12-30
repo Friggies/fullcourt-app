@@ -62,7 +62,6 @@ export default function FiltersScreen() {
           console.log('[Filters] categories response ignored (unmounted)');
           return;
         }
-
         if (error) {
           console.error('[Filters] categories error:', describeError(error), {
             status,
