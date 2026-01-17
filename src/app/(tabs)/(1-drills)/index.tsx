@@ -243,8 +243,6 @@ export default function Drills() {
 
   return (
     <>
-      <Stack.Screen options={{}} />
-
       {loading && drills.length === 0 ? (
         <ActivityIndicator style={{ marginTop: 24 }} />
       ) : error ? (
