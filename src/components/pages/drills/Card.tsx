@@ -26,7 +26,7 @@ export default function Card({ drill }: CardProps) {
         <Image
           style={styles.image}
           source={{
-            uri: 'https://fullcourt-training.com/thumbnails/3.webp',
+            uri: `https://fullcourt-training.com/thumbnails/${drill.id}.webp`,
           }}
         />
         {drill.profiles_drills != null && drill.profiles_drills.length > 0 && (

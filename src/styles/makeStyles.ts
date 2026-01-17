@@ -45,7 +45,7 @@ export const makeStyles = (theme: Theme) =>
     },
     content: {
       position: 'absolute',
-      bottom: 0,
+      bottom: -1,
       left: 0,
       backgroundColor: theme.colors.drillCard.background,
       padding: 8,
