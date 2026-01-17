@@ -1,10 +1,65 @@
 import { Slot, SplashScreen } from 'expo-router';
-import { SessionProvider } from '../contexts/auth';
+import { SessionProvider, useSession } from '../contexts/auth';
 import { useFonts } from 'expo-font';
-import { useEffect } from 'react';
+import { useEffect, useRef } from 'react';
 import { ThemeProvider } from '../contexts/theme';
 
+import { Platform } from 'react-native';
+import Purchases, { LOG_LEVEL } from 'react-native-purchases';
+
 SplashScreen.preventAutoHideAsync();
+
+function RevenueCatSync() {
+  const { session } = useSession();
+  const configured = useRef(false);
+
+  // Track whether we've ever logged in to a known (non-anon) user
+  const lastKnownUserId = useRef<string | null>(null);
+
+  useEffect(() => {
+    if (configured.current) return;
+
+    Purchases.setLogLevel(LOG_LEVEL.INFO);
+
+    const apiKey =
+      Platform.OS === 'ios'
+        ? 'appl_rrUGtecCbBhMEidywhwuRjzgXil'
+        : 'goog_PzveQLrMfSQvzxRfGEjcCkzevGm';
+
+    Purchases.configure({ apiKey });
+    configured.current = true;
+  }, []);
+
+  useEffect(() => {
+    if (!configured.current) return;
+
+    const appUserID = session?.user?.id ?? null;
+
+    (async () => {
+      try {
+        if (appUserID) {
+          // Log into your Supabase user id (switching users is fine)
+          if (lastKnownUserId.current !== appUserID) {
+            await Purchases.logIn(appUserID);
+            await Purchases.invalidateCustomerInfoCache();
+          }
+          lastKnownUserId.current = appUserID;
+        } else {
+          // Only log out if we had previously logged in
+          if (lastKnownUserId.current) {
+            await Purchases.logOut();
+            lastKnownUserId.current = null;
+          }
+          // else: already anonymous → do nothing
+        }
+      } catch (e) {
+        console.warn('RevenueCat identity sync failed:', e);
+      }
+    })();
+  }, [session?.user?.id]);
+
+  return null;
+}
 
 export default function AppLayout() {
   const [loaded, error] = useFonts({
@@ -28,6 +83,7 @@ export default function AppLayout() {
   return (
     <SessionProvider>
       <ThemeProvider>
+        {/*<RevenueCatSync */}
         <Slot />
       </ThemeProvider>
     </SessionProvider>
